@@ -1,13 +1,16 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "module": "CommonJS",
+    "module": "Node16",
+    "moduleResolution": "node16",
     "rootDir": "./src",
     "outDir": "./dist",
     "strict": true,
     "esModuleInterop": true,
-    "moduleResolution": "node",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+      "emitDecoratorMetadata": true,
+        "experimentalDecorators": true
+
+
   }
 }
-// this file manages how typescript code is converted to javascript 

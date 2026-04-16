@@ -28,8 +28,30 @@ IF invalid → 401
 Controller runs (only if valid)
 
 - Middleware is like a security gate before API runs
+- It runs BEFORE controller 
 
 # What is a controller?
 - An array that tells the server where to find your logic.
+- Where routes live + how requests are handled 
 # What does createExpressserver() mean?
 - This is the core function from the routing-controllers library. It creates a new Express app instance and automatically mounts your controllers.
+
+# Backend Logic 
+# Server.ts 
+- Server.ts starts ther backend
+- uses routing controllers :explained above
+- automatically routes controllers hence no manual express set up needed
+
+# Controller 
+- defines API routes using decorators 
+
+# Middleware 
+- verifies cognito token 
+- blocks or allows requests 
+
+# Manager
+- business logic
+- keeps controller clean
+
+
+

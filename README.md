@@ -4,8 +4,8 @@
 - if someone hits a / or something then server decides where to go
 # TYPES OF ROUTES
 - GET (reads data)
-- POST(reads data)
-- PUT
+- POST()
+- PUT(updates)
 - DELETE
 
 # What is express router?

@@ -21,64 +21,8 @@ type ConfirmUserInput = {
 }; // creates my cognito user pool, we're running this once to set things up. 
 
 export class AuthManager {
-  async createUserPool() {
-    const command = new CreateUserPoolCommand({
-      PoolName: "traveler-user-pool",
-      AutoVerifiedAttributes: ["email"],
-      UsernameAttributes: ["email"],
-      Schema: [
-        {
-          Name: "email",
-          Required: true,
-          Mutable: true,
-        },
-      ],
-      VerificationMessageTemplate: {
-        DefaultEmailOption: "CONFIRM_WITH_CODE",
-      },
-    });
+  
 
-    const response = await cognitoClient.send(command);
-
-    return {
-      userPoolId: response.UserPool?.Id,
-      userPoolArn: response.UserPool?.Arn,
-      userPoolName: response.UserPool?.Name,
-    };
-  } // // Creates a new Cognito User Pool with email as username and sends a 6-digit verification code on signup
- 
-  async createUserPoolClient(userPoolId: string) { // creates an app client which lets the backend talk to my user pool
-    const command = new CreateUserPoolClientCommand({
-      UserPoolId: userPoolId,
-      ClientName: "traveler-app-client",
-      GenerateSecret: false, // this needs to be false to continue using sdk on my backend, true would have broken it
-      ExplicitAuthFlows: [
-        "ALLOW_USER_PASSWORD_AUTH",
-        "ALLOW_USER_SRP_AUTH",
-        "ALLOW_REFRESH_TOKEN_AUTH",
-      ],
-    });
-
-    const response = await cognitoClient.send(command);
-
-    return {
-      clientId: response.UserPoolClient?.ClientId,
-      clientName: response.UserPoolClient?.ClientName,
-    };
-  } // // Creates an app client for the User Pool, enabling password and token-based auth flows
-
-  async checkUserPoolExists(userPoolId: string) {
-    const command = new DescribeUserPoolCommand({
-      UserPoolId: userPoolId,
-    });
-
-    const response = await cognitoClient.send(command);
-
-    return {
-      exists: !!response.UserPool,
-      userPool: response.UserPool,
-    };
-  } // checks if the user pool already exists 
 
   async registerUser(input: RegisterUserInput) {
     const clientId = process.env.COGNITO_APP_CLIENT_ID;
@@ -157,27 +101,6 @@ async loginUser(email: string, password: string) {
     idToken: response.AuthenticationResult?.IdToken,
     refreshToken: response.AuthenticationResult?.RefreshToken,
     message: "Login successful",
-  };
-}
-
-async verifyLoginMfa(session: string, mfaCode: string, email: string) {
-  const command = new RespondToAuthChallengeCommand({
-    ClientId: process.env.COGNITO_APP_CLIENT_ID!,
-    ChallengeName: "SMS_MFA", // or "SOFTWARE_TOKEN_MFA"
-    Session: session,
-    ChallengeResponses: {
-      USERNAME: email,
-      SMS_MFA_CODE: mfaCode,
-    },
-  });
-
-  const response = await cognitoClient.send(command);
-
-  return {
-    accessToken: response.AuthenticationResult?.AccessToken,
-    idToken: response.AuthenticationResult?.IdToken,
-    refreshToken: response.AuthenticationResult?.RefreshToken,
-    message: "You have logged in successfully!",
   };
 }
 }

@@ -24,8 +24,4 @@ loginUser(@Body() body: { email: string; password: string }) {
     return authManager.loginUser(body.email, body.password);
 }
 
-@Post('/verify-login')
-verifyLogin(@Body() body: { email: string; session: string; code: string }) {
-    return authManager.verifyLoginMfa(body.session, body.code, body.email);
-}
 }

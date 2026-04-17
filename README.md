@@ -52,6 +52,10 @@ Controller runs (only if valid)
 # Manager
 - business logic
 - keeps controller clean
+# What is async?
+- When you put async in front of a function it means the function will do something that takes time — like waiting for a response from AWS. Instead of freezing everything while it waits, it lets the rest of your app keep running.
+# What is await?
+- The await says "pause here and wait for this to finish before moving on." Without it, your code would move to the next line before AWS even responded.
 
 
 

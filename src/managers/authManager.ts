@@ -6,31 +6,23 @@ import {
   ConfirmSignUpCommand,
 } from "@aws-sdk/client-cognito-identity-provider";
 import { cognitoClient } from "../config/cognito";
-import { RegisterUserInput } from "../models/authenticationModels";
+import {
+  ConfirmUserInput,
+  CreateUserPostRequest,
+} from "../models/authenticationModels";
 import {
   InitiateAuthCommand,
   RespondToAuthChallengeCommand,
 } from "@aws-sdk/client-cognito-identity-provider";
 
-
-
-
-type ConfirmUserInput = {
-  username: string;
-  code: string;
-}; // creates my cognito user pool, we're running this once to set things up. 
-
 export class AuthManager {
-  
-
-
-  async registerUser(input: RegisterUserInput) {
+  async registerUser(input: CreateUserPostRequest) {
     const clientId = process.env.COGNITO_APP_CLIENT_ID;
 
     if (!clientId) {
       throw new Error("COGNITO_CLIENT_ID is missing");
     }
-    console.log('input', input)
+    console.log("input", input);
 
     const command = new SignUpCommand({
       ClientId: clientId,
@@ -51,9 +43,10 @@ export class AuthManager {
       userConfirmed: response.UserConfirmed,
       codeDeliveryDetails: response.CodeDeliveryDetails,
     };
-  } // filters down the 3 things iu actually need for my frontend 
+  } // filters down the 3 things iu actually need for my frontend
 
-  async confirmUser(input: ConfirmUserInput) { // // Confirms the user's account by verifying the 6-digit code sent to their email
+  async confirmUser(input: ConfirmUserInput) {
+    // // Confirms the user's account by verifying the 6-digit code sent to their email
     const clientId = process.env.COGNITO_APP_CLIENT_ID;
 
     if (!clientId) {
@@ -69,38 +62,40 @@ export class AuthManager {
     const response = await cognitoClient.send(command);
 
     return {
-      success: response.$metadata.httpStatusCode === 200, //checking if the request works 
+      success: response.$metadata.httpStatusCode === 200, //checking if the request works
     };
   }
 
-async loginUser(email: string, password: string) {
-  const command = new InitiateAuthCommand({
-    AuthFlow: "USER_PASSWORD_AUTH",
-    ClientId: process.env.COGNITO_APP_CLIENT_ID!,
-    AuthParameters: {
-      USERNAME: email,
-      PASSWORD: password,
-    },
-  });
+  async loginUser(email: string, password: string) {
+    const command = new InitiateAuthCommand({
+      AuthFlow: "USER_PASSWORD_AUTH",
+      ClientId: process.env.COGNITO_APP_CLIENT_ID!,
+      AuthParameters: {
+        USERNAME: email,
+        PASSWORD: password,
+      },
+    });
 
-  const response = await cognitoClient.send(command);
+    const response = await cognitoClient.send(command);
 
-  // If MFA is required, Cognito returns a session + challenge
-  if (response.ChallengeName === "SOFTWARE_TOKEN_MFA" || 
-      response.ChallengeName === "SMS_MFA") {
+    // If MFA is required, Cognito returns a session + challenge
+    if (
+      response.ChallengeName === "SOFTWARE_TOKEN_MFA" ||
+      response.ChallengeName === "SMS_MFA"
+    ) {
+      return {
+        session: response.Session,
+        challengeName: response.ChallengeName,
+        message: "MFA code sent. Please verify.",
+      };
+    }
+
+    // If no MFA configured, returns tokens directly
     return {
-      session: response.Session,
-      challengeName: response.ChallengeName,
-      message: "MFA code sent. Please verify.",
+      accessToken: response.AuthenticationResult?.AccessToken,
+      idToken: response.AuthenticationResult?.IdToken,
+      refreshToken: response.AuthenticationResult?.RefreshToken,
+      message: "Login successful",
     };
   }
-
-  // If no MFA configured, returns tokens directly
-  return {
-    accessToken: response.AuthenticationResult?.AccessToken,
-    idToken: response.AuthenticationResult?.IdToken,
-    refreshToken: response.AuthenticationResult?.RefreshToken,
-    message: "Login successful",
-  };
-}
 }

@@ -15,6 +15,16 @@ import {
   RespondToAuthChallengeCommand,
 } from "@aws-sdk/client-cognito-identity-provider";
 
+import {
+  CognitoIdentityProviderClient,
+  ForgotPasswordCommand,
+  ConfirmForgotPasswordCommand,
+} from "@aws-sdk/client-cognito-identity-provider";
+
+const client = new CognitoIdentityProviderClient({
+  region: process.env.AWS_REGION,
+});
+
 export class AuthManager {
   async registerUser(input: CreateUserPostRequest) {
     const clientId = process.env.COGNITO_APP_CLIENT_ID;
@@ -97,5 +107,32 @@ export class AuthManager {
       refreshToken: response.AuthenticationResult?.RefreshToken,
       message: "Login successful",
     };
+  }
+  async forgotPassword(email: string) {
+    const forgotPasswordRequest = new ForgotPasswordCommand({
+      ClientId: process.env.COGNITO_APP_CLIENT_ID!,
+      Username: email,
+    }); // Defines an async function that takes the user's email as input, creates an AWS Cognito command object that says "I want to trigger a forgot password flow, tells cognito which app is making the request, email tells them which user forgot their passwqord
+
+    await client.send(forgotPasswordRequest);
+    return { message: "Verification code sent to email" };
+  } // sends command and then user waits for the verification code
+
+  async confirmForgotPassword(
+    // takes 3 inputs from user so they can change their password
+    email: string,
+    code: string,
+    newPassword: string,
+  ) {
+    const confirmPasswordRequest = new ConfirmForgotPasswordCommand({
+      // cognito command that says i want to confirm password reset
+      ClientId: process.env.COGNITO_APP_CLIENT_ID!, //identifies app to cognito
+      Username: email,
+      ConfirmationCode: code,
+      Password: newPassword,
+    });
+
+    await client.send(confirmPasswordRequest); //aws gets the command, verifies the code and updates the password
+    return { message: "Password reset successful" };
   }
 }

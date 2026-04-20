@@ -14,11 +14,13 @@ export type LoginPostRequest = {
   email: string;
 };
 
-export type forgotPassword = {
+export type forgotPasswordRequest = {
   email: string;
+  code?: string;
+  newPassword?: string;
 };
 
-export type confirmForgotPassword = {
+export type ConfirmForgotPasswordRequest = {
   email: string;
   code: string;
   newPassword: string;

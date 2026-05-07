@@ -1,0 +1,34 @@
+{
+  "name": "traveler-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "prepare": "husky && husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tanajj17891/traveler-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/tanajj17891/traveler-backend/issues"
+  },
+  "lint-staged": {
+    "linters": {
+      "*.ts": [
+        "eslint --fix",
+        "git add"
+      ]
+    },
+    "*.{ts,css,md}": "prettier --write"
+  },
+  "homepage": "https://github.com/tanajj17891/traveler-backend#readme",
+  "dependencies": {}
+}

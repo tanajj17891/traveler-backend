@@ -22,7 +22,7 @@ import {
 } from "@aws-sdk/client-cognito-identity-provider";
 
 const client = new CognitoIdentityProviderClient({
-  region: process.env.AWS_REGION,
+  region: process.env.COGNITO_REGION,
 });
 
 export class AuthManager {
@@ -53,7 +53,7 @@ export class AuthManager {
       userConfirmed: response.UserConfirmed,
       codeDeliveryDetails: response.CodeDeliveryDetails,
     };
-  } // filters down the 3 things iu actually need for my frontend
+  } // filters down the 3 things i actually need for my frontend
 
   async confirmUser(input: ConfirmUserInput) {
     // // Confirms the user's account by verifying the 6-digit code sent to their email

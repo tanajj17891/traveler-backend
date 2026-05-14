@@ -1,17 +1,15 @@
 import { Controller, Get, Post, UseBefore, Req } from "routing-controllers"; //useBefore attaches middleware to a route
-import { Request } from "express";
-import { AuthMiddleware } from "../middleware/authMiddleware"; //my cognito auth checker 
-import HealthManager from "../managers/healthManager"; //business logic layer
-import 'reflect-metadata';
 
+import HealthManager from "../managers/healthManager"; //business logic layer
+import "reflect-metadata";
 
 @Controller()
 export class HealthController {
-  healthManager = new HealthManager(); //this class is relling routing controllers to scan the class for routes, creates an object 
+  healthManager = new HealthManager(); //this class is relling routing controllers to scan the class for routes, creates an object
 
   @Get("/health")
   getHealth() {
-    console.log('banama')
+    console.log("banama");
     return this.healthManager.healthMessage();
   }
 

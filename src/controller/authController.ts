@@ -1,15 +1,13 @@
-import { Request, Response } from "express";
 import { AuthManager } from "../managers/authManager";
-import { Body, Controller, JsonController, Post } from "routing-controllers";
+import { Body, JsonController, Post } from "routing-controllers";
 import {
   ConfirmUserPostRequest,
   CreateUserPostRequest,
   LoginPostRequest,
-  forgotPasswordRequest,
+  ForgotPasswordRequest,
   ConfirmForgotPasswordRequest,
 } from "../models/authenticationModels";
 import "reflect-metadata";
-import { ForgotPasswordRequest } from "@aws-sdk/client-cognito-identity-provider";
 
 const authManager = new AuthManager();
 
@@ -30,7 +28,7 @@ export class AuthController {
     return authManager.loginUser(body.email, body.password);
   }
   @Post("/forgot-password")
-  forgotPassword(@Body() body: forgotPasswordRequest) {
+  forgotPassword(@Body() body: ForgotPasswordRequest) {
     return authManager.forgotPassword(body.email);
   }
 

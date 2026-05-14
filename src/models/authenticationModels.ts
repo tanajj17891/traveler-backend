@@ -14,10 +14,8 @@ export type LoginPostRequest = {
   email: string;
 };
 
-export type forgotPasswordRequest = {
+export type ForgotPasswordRequest = {
   email: string;
-  code?: string;
-  newPassword?: string;
 };
 
 export type ConfirmForgotPasswordRequest = {

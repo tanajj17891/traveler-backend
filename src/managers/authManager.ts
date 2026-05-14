@@ -1,26 +1,16 @@
 import {
-  CreateUserPoolClientCommand,
-  CreateUserPoolCommand,
-  DescribeUserPoolCommand,
   SignUpCommand,
   ConfirmSignUpCommand,
+  CognitoIdentityProviderClient,
+  ForgotPasswordCommand,
+  ConfirmForgotPasswordCommand,
+  InitiateAuthCommand,
 } from "@aws-sdk/client-cognito-identity-provider";
 import { cognitoClient } from "../config/cognito";
 import {
   ConfirmUserInput,
   CreateUserPostRequest,
 } from "../models/authenticationModels";
-import {
-  InitiateAuthCommand,
-  RespondToAuthChallengeCommand,
-} from "@aws-sdk/client-cognito-identity-provider";
-
-import {
-  CognitoIdentityProviderClient,
-  ForgotPasswordCommand,
-  ConfirmForgotPasswordCommand,
-} from "@aws-sdk/client-cognito-identity-provider";
-
 const client = new CognitoIdentityProviderClient({
   region: process.env.COGNITO_REGION,
 });

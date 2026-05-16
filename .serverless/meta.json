@@ -1,6 +1,6 @@
 {
   "/Users/tanajjzahir/development/projects/traveler/traveler-backend/serverless.yml": {
-    "versionFramework": "4.35.1",
+    "versionFramework": "4.36.1",
     "servicePath": "/Users/tanajjzahir/development/projects/traveler/traveler-backend/serverless.yml",
     "serviceConfigFileName": "serverless.yml",
     "service": {
@@ -8,9 +8,9 @@
       "provider": {
         "name": "aws",
         "runtime": "nodejs18.x",
-        "region": "us-east-2",
+        "region": "us-east-1",
         "environment": {
-          "COGNITO_APP_CLIENT_ID": "6me7is6lpb94u59j5fsng2dds7",
+          "COGNITO_APP_CLIENT_ID": "7pig9ur5tb615qbamjj9v1j6bb",
           "COGNITO_REGION": "us-east-2"
         },
         "stage": "dev",
@@ -94,8 +94,8 @@
               "Type": "AWS::Lambda::Function",
               "Properties": {
                 "Code": {
-                  "S3Bucket": "serverless-framework-deployments-us-east-2-708bc2be-9c60",
-                  "S3Key": "serverless/traveler-backend/dev/1778101170055-2026-05-06T20:59:30.055Z/traveler-backend.zip"
+                  "S3Bucket": "serverless-framework-deployments-us-east-1-18aaef2c-8b70",
+                  "S3Key": "serverless/traveler-backend/dev/1778888997451-2026-05-15T23:49:57.451Z/traveler-backend.zip"
                 },
                 "Handler": "src/server.handler",
                 "Runtime": "nodejs18.x",
@@ -104,7 +104,7 @@
                 "Timeout": 6,
                 "Environment": {
                   "Variables": {
-                    "COGNITO_APP_CLIENT_ID": "6me7is6lpb94u59j5fsng2dds7",
+                    "COGNITO_APP_CLIENT_ID": "7pig9ur5tb615qbamjj9v1j6bb",
                     "COGNITO_REGION": "us-east-2",
                     "NODE_OPTIONS": "--enable-source-maps"
                   }
@@ -115,14 +115,14 @@
               },
               "DependsOn": ["ApiLogGroup"]
             },
-            "ApiLambdaVersionD3xeG6hLryxzrgCaok5XNCytXD5zPD8iEt87CMa10g": {
+            "ApiLambdaVersione7t2A5ePYWmi8RPEn7PzDLUgcrlehg3W5JkcbxSEL2Q": {
               "Type": "AWS::Lambda::Version",
               "DeletionPolicy": "Retain",
               "Properties": {
                 "FunctionName": {
                   "Ref": "ApiLambdaFunction"
                 },
-                "CodeSha256": "Yk8rxQttlNNkG3KbjmHv9oZJFMIr30nlJQoEXHuvYCY="
+                "CodeSha256": "iWzm6mF3Pfs8ShoCLvesYaItpWczyY42Smbpu8K2w5M="
               }
             },
             "HttpApi": {
@@ -217,7 +217,7 @@
           },
           "Outputs": {
             "ServerlessDeploymentBucketName": {
-              "Value": "serverless-framework-deployments-us-east-2-708bc2be-9c60",
+              "Value": "serverless-framework-deployments-us-east-1-18aaef2c-8b70",
               "Export": {
                 "Name": "sls-traveler-backend-dev-ServerlessDeploymentBucketName"
               }
@@ -225,7 +225,7 @@
             "ApiLambdaFunctionQualifiedArn": {
               "Description": "Current Lambda function version",
               "Value": {
-                "Ref": "ApiLambdaVersionD3xeG6hLryxzrgCaok5XNCytXD5zPD8iEt87CMa10g"
+                "Ref": "ApiLambdaVersione7t2A5ePYWmi8RPEn7PzDLUgcrlehg3W5JkcbxSEL2Q"
               },
               "Export": {
                 "Name": "sls-traveler-backend-dev-ApiLambdaFunctionQualifiedArn"
@@ -291,7 +291,7 @@
           "timeout": 6,
           "runtime": "nodejs18.x",
           "vpc": {},
-          "versionLogicalId": "ApiLambdaVersionD3xeG6hLryxzrgCaok5XNCytXD5zPD8iEt87CMa10g"
+          "versionLogicalId": "ApiLambdaVersione7t2A5ePYWmi8RPEn7PzDLUgcrlehg3W5JkcbxSEL2Q"
         }
       },
       "build": {
@@ -303,9 +303,9 @@
     "provider": {
       "name": "aws",
       "runtime": "nodejs18.x",
-      "region": "us-east-2",
+      "region": "us-east-1",
       "environment": {
-        "COGNITO_APP_CLIENT_ID": "6me7is6lpb94u59j5fsng2dds7",
+        "COGNITO_APP_CLIENT_ID": "7pig9ur5tb615qbamjj9v1j6bb",
         "COGNITO_REGION": "us-east-2"
       },
       "stage": "dev",
@@ -389,8 +389,8 @@
             "Type": "AWS::Lambda::Function",
             "Properties": {
               "Code": {
-                "S3Bucket": "serverless-framework-deployments-us-east-2-708bc2be-9c60",
-                "S3Key": "serverless/traveler-backend/dev/1778101170055-2026-05-06T20:59:30.055Z/traveler-backend.zip"
+                "S3Bucket": "serverless-framework-deployments-us-east-1-18aaef2c-8b70",
+                "S3Key": "serverless/traveler-backend/dev/1778888997451-2026-05-15T23:49:57.451Z/traveler-backend.zip"
               },
               "Handler": "src/server.handler",
               "Runtime": "nodejs18.x",
@@ -399,7 +399,7 @@
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "COGNITO_APP_CLIENT_ID": "6me7is6lpb94u59j5fsng2dds7",
+                  "COGNITO_APP_CLIENT_ID": "7pig9ur5tb615qbamjj9v1j6bb",
                   "COGNITO_REGION": "us-east-2",
                   "NODE_OPTIONS": "--enable-source-maps"
                 }
@@ -410,14 +410,14 @@
             },
             "DependsOn": ["ApiLogGroup"]
           },
-          "ApiLambdaVersionD3xeG6hLryxzrgCaok5XNCytXD5zPD8iEt87CMa10g": {
+          "ApiLambdaVersione7t2A5ePYWmi8RPEn7PzDLUgcrlehg3W5JkcbxSEL2Q": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ApiLambdaFunction"
               },
-              "CodeSha256": "Yk8rxQttlNNkG3KbjmHv9oZJFMIr30nlJQoEXHuvYCY="
+              "CodeSha256": "iWzm6mF3Pfs8ShoCLvesYaItpWczyY42Smbpu8K2w5M="
             }
           },
           "HttpApi": {
@@ -512,7 +512,7 @@
         },
         "Outputs": {
           "ServerlessDeploymentBucketName": {
-            "Value": "serverless-framework-deployments-us-east-2-708bc2be-9c60",
+            "Value": "serverless-framework-deployments-us-east-1-18aaef2c-8b70",
             "Export": {
               "Name": "sls-traveler-backend-dev-ServerlessDeploymentBucketName"
             }
@@ -520,7 +520,7 @@
           "ApiLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ApiLambdaVersionD3xeG6hLryxzrgCaok5XNCytXD5zPD8iEt87CMa10g"
+              "Ref": "ApiLambdaVersione7t2A5ePYWmi8RPEn7PzDLUgcrlehg3W5JkcbxSEL2Q"
             },
             "Export": {
               "Name": "sls-traveler-backend-dev-ApiLambdaFunctionQualifiedArn"
@@ -573,7 +573,7 @@
       "serviceProvider": null,
       "instanceParameters": null
     },
-    "serviceRawFile": "service: traveler-backend\n\nprovider:\n  name: aws\n  runtime: nodejs18.x\n  region: us-east-2\n  environment:\n    COGNITO_APP_CLIENT_ID: ${env:COGNITO_APP_CLIENT_ID}\n    COGNITO_REGION: ${env:AWS_REGION}\n\nfunctions:\n  api:\n    handler: src/server.handler\n    events:\n      - httpApi:\n          path: /{proxy+}\n          method: ANY\n\nbuild:\n  esbuild:\n    external:\n      - \"@koa/cors\"\n      - \"koa\"\n      - \"koa-router\"\n      - \"koa-bodyparser\"",
+    "serviceRawFile": "service: traveler-backend\n\nprovider:\n  name: aws\n  runtime: nodejs18.x\n  region: us-east-1\n  environment:\n    COGNITO_APP_CLIENT_ID: ${env:COGNITO_APP_CLIENT_ID}\n    COGNITO_REGION: ${env:AWS_REGION}\n\nfunctions:\n  api:\n    handler: src/server.handler\n    events:\n      - httpApi:\n          path: /{proxy+}\n          method: ANY\n\nbuild:\n  esbuild:\n    external:\n      - \"@koa/cors\"\n      - \"koa\"\n      - \"koa-router\"\n      - \"koa-bodyparser\"\n",
     "command": ["deploy"],
     "options": {},
     "orgId": "952407b7-d6c3-4bf0-9031-89b5cc69d83f",
@@ -582,31 +582,31 @@
     "userName": "travelerta",
     "serviceProviderAwsAccountId": "022784798591",
     "serviceProviderAwsCfStackName": "traveler-backend-dev",
-    "serviceProviderAwsCfStackId": "arn:aws:cloudformation:us-east-2:022784798591:stack/traveler-backend-dev/7b95e200-498e-11f1-945b-06970986a6c7",
-    "serviceProviderAwsCfStackCreated": "2026-05-06T20:59:33.403Z",
+    "serviceProviderAwsCfStackId": "arn:aws:cloudformation:us-east-1:022784798591:stack/traveler-backend-dev/b5046260-4fbe-11f1-8f3a-0afff98e9063",
+    "serviceProviderAwsCfStackCreated": "2026-05-14T17:59:52.617Z",
     "serviceProviderAwsCfStackUpdated": null,
     "serviceProviderAwsCfStackStatus": "CREATE_COMPLETE",
     "serviceProviderAwsCfStackOutputs": [
       {
         "OutputKey": "ApiLambdaFunctionQualifiedArn",
-        "OutputValue": "arn:aws:lambda:us-east-2:022784798591:function:traveler-backend-dev-api:1",
+        "OutputValue": "arn:aws:lambda:us-east-1:022784798591:function:traveler-backend-dev-api:1",
         "Description": "Current Lambda function version",
         "ExportName": "sls-traveler-backend-dev-ApiLambdaFunctionQualifiedArn"
       },
       {
         "OutputKey": "HttpApiId",
-        "OutputValue": "2gk8ie5lle",
+        "OutputValue": "gwof0lato0",
         "Description": "Id of the HTTP API",
         "ExportName": "sls-traveler-backend-dev-HttpApiId"
       },
       {
         "OutputKey": "ServerlessDeploymentBucketName",
-        "OutputValue": "serverless-framework-deployments-us-east-2-708bc2be-9c60",
+        "OutputValue": "serverless-framework-deployments-us-east-1-18aaef2c-8b70",
         "ExportName": "sls-traveler-backend-dev-ServerlessDeploymentBucketName"
       },
       {
         "OutputKey": "HttpApiUrl",
-        "OutputValue": "https://2gk8ie5lle.execute-api.us-east-2.amazonaws.com",
+        "OutputValue": "https://gwof0lato0.execute-api.us-east-1.amazonaws.com",
         "Description": "URL of the HTTP API",
         "ExportName": "sls-traveler-backend-dev-HttpApiUrl"
       }
@@ -690,8 +690,8 @@
           "Type": "AWS::Lambda::Function",
           "Properties": {
             "Code": {
-              "S3Bucket": "serverless-framework-deployments-us-east-2-708bc2be-9c60",
-              "S3Key": "serverless/traveler-backend/dev/1778101170055-2026-05-06T20:59:30.055Z/traveler-backend.zip"
+              "S3Bucket": "serverless-framework-deployments-us-east-1-18aaef2c-8b70",
+              "S3Key": "serverless/traveler-backend/dev/1778888997451-2026-05-15T23:49:57.451Z/traveler-backend.zip"
             },
             "Handler": "src/server.handler",
             "Runtime": "nodejs18.x",
@@ -700,7 +700,7 @@
             "Timeout": 6,
             "Environment": {
               "Variables": {
-                "COGNITO_APP_CLIENT_ID": "6me7is6lpb94u59j5fsng2dds7",
+                "COGNITO_APP_CLIENT_ID": "7pig9ur5tb615qbamjj9v1j6bb",
                 "COGNITO_REGION": "us-east-2",
                 "NODE_OPTIONS": "--enable-source-maps"
               }
@@ -711,14 +711,14 @@
           },
           "DependsOn": ["ApiLogGroup"]
         },
-        "ApiLambdaVersionD3xeG6hLryxzrgCaok5XNCytXD5zPD8iEt87CMa10g": {
+        "ApiLambdaVersione7t2A5ePYWmi8RPEn7PzDLUgcrlehg3W5JkcbxSEL2Q": {
           "Type": "AWS::Lambda::Version",
           "DeletionPolicy": "Retain",
           "Properties": {
             "FunctionName": {
               "Ref": "ApiLambdaFunction"
             },
-            "CodeSha256": "Yk8rxQttlNNkG3KbjmHv9oZJFMIr30nlJQoEXHuvYCY="
+            "CodeSha256": "iWzm6mF3Pfs8ShoCLvesYaItpWczyY42Smbpu8K2w5M="
           }
         },
         "HttpApi": {
@@ -813,7 +813,7 @@
       },
       "Outputs": {
         "ServerlessDeploymentBucketName": {
-          "Value": "serverless-framework-deployments-us-east-2-708bc2be-9c60",
+          "Value": "serverless-framework-deployments-us-east-1-18aaef2c-8b70",
           "Export": {
             "Name": "sls-traveler-backend-dev-ServerlessDeploymentBucketName"
           }
@@ -821,7 +821,7 @@
         "ApiLambdaFunctionQualifiedArn": {
           "Description": "Current Lambda function version",
           "Value": {
-            "Ref": "ApiLambdaVersionD3xeG6hLryxzrgCaok5XNCytXD5zPD8iEt87CMa10g"
+            "Ref": "ApiLambdaVersione7t2A5ePYWmi8RPEn7PzDLUgcrlehg3W5JkcbxSEL2Q"
           },
           "Export": {
             "Name": "sls-traveler-backend-dev-ApiLambdaFunctionQualifiedArn"

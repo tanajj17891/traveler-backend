@@ -94882,9 +94882,9 @@ var require_Controller = __commonJS({
   "node_modules/routing-controllers/cjs/decorator/Controller.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.Controller = Controller3;
+    exports2.Controller = Controller2;
     var index_1 = require_cjs3();
-    function Controller3(baseRoute, options) {
+    function Controller2(baseRoute, options) {
       return function (object) {
         (0, index_1.getMetadataArgsStorage)().controllers.push({
           type: "default",
@@ -98835,10 +98835,8 @@ var cognitoClient =
   });
 
 // src/managers/authManager.ts
-var import_client_cognito_identity_provider3 = require("@aws-sdk/client-cognito-identity-provider");
-var import_client_cognito_identity_provider4 = require("@aws-sdk/client-cognito-identity-provider");
 var client =
-  new import_client_cognito_identity_provider4.CognitoIdentityProviderClient({
+  new import_client_cognito_identity_provider2.CognitoIdentityProviderClient({
     region: process.env.COGNITO_REGION,
   });
 var AuthManager = class {
@@ -98890,7 +98888,7 @@ var AuthManager = class {
   }
   async loginUser(email, password) {
     const command =
-      new import_client_cognito_identity_provider3.InitiateAuthCommand({
+      new import_client_cognito_identity_provider2.InitiateAuthCommand({
         AuthFlow: "USER_PASSWORD_AUTH",
         ClientId: process.env.COGNITO_APP_CLIENT_ID,
         AuthParameters: {
@@ -98918,7 +98916,7 @@ var AuthManager = class {
   }
   async forgotPassword(email) {
     const forgotPasswordRequest =
-      new import_client_cognito_identity_provider4.ForgotPasswordCommand({
+      new import_client_cognito_identity_provider2.ForgotPasswordCommand({
         ClientId: process.env.COGNITO_APP_CLIENT_ID,
         Username: email,
       });
@@ -98928,7 +98926,7 @@ var AuthManager = class {
   // sends command and then user waits for the verification code
   async confirmForgotPassword(email, code, newPassword) {
     const confirmPasswordRequest =
-      new import_client_cognito_identity_provider4.ConfirmForgotPasswordCommand(
+      new import_client_cognito_identity_provider2.ConfirmForgotPasswordCommand(
         {
           // cognito command that says i want to confirm password reset
           ClientId: process.env.COGNITO_APP_CLIENT_ID,

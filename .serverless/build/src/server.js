@@ -99064,7 +99064,10 @@ var import_serverless_http = __toESM(require_serverless_http());
 import_dotenv.default.config();
 var app = (0, import_routing_controllers3.createExpressServer)({
   cors: {
-    origin: /^http:\/\/localhost:\d+$/,
+    origin: [
+      "http://localhost:5173",
+      "http://littletraveler-frontend.s3-website-us-east-1.amazonaws.com",
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   },

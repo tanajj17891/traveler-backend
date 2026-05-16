@@ -8,7 +8,10 @@ dotenv.config();
 
 const app = createExpressServer({
   cors: {
-    origin: /^http:\/\/localhost:\d+$/,
+    origin: [
+      "http://localhost:5173",
+      "http://littletraveler-frontend.s3-website-us-east-1.amazonaws.com",
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   },

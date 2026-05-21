@@ -39,15 +39,21 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.1",
     "express": "^5.2.1",
+    "http-errors": "^2.0.1",
+    "http-status": "^1.8.1",
+    "http-status-codes": "^2.3.0",
     "multer": "^2.1.1",
     "reflect-metadata": "^0.2.2",
     "routing-controllers": "^0.11.3",
-    "serverless-http": "^4.0.0"
+    "serverless-http": "^4.0.0",
+    "typescript-rest": "^3.0.4"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.6",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
+    "@types/http-errors": "^2.0.5",
+    "@types/http-status": "^0.2.30",
     "@types/multer": "^2.1.0",
     "@types/node": "^25.6.0",
     "@types/serverless": "^3.12.28",

@@ -1,8 +1,10 @@
+import express from "express";
 import dotenv from "dotenv";
 import { AuthController } from "./controller/authController";
 import { HealthController } from "./controller/healthController";
 import { createExpressServer } from "routing-controllers";
 import serverless from "serverless-http";
+import { ErrorMiddleware } from "./middleware/errorMiddleware";
 
 dotenv.config();
 
@@ -13,6 +15,8 @@ const app = createExpressServer({
     allowedHeaders: ["Content-Type", "Authorization"],
   },
   controllers: [AuthController, HealthController],
+  middlewares: [ErrorMiddleware],
+  defaultErrorHandler: false,
 });
 
 const PORT = process.env.PORT || 5001;

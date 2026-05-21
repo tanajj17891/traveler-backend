@@ -1,5 +1,5 @@
 export default class HealthManager {
-    healthMessage () {
-        return 'API is healthy'
-    }
+  healthMessage() {
+    // throw new BadRequestError({description: "its a bad request"})
+  }
 }

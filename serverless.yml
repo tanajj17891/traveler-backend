@@ -1,0 +1,25 @@
+service: traveler-backend
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  environment:
+    COGNITO_APP_CLIENT_ID: ${env:COGNITO_APP_CLIENT_ID}
+    COGNITO_REGION: ${env:AWS_REGION}
+
+functions:
+  api:
+    handler: src/server.handler
+    events:
+      - httpApi:
+          path: /{proxy+}
+          method: ANY
+
+build:
+  esbuild:
+    external:
+      - "@koa/cors"
+      - "koa"
+      - "koa-router"
+      - "koa-bodyparser"

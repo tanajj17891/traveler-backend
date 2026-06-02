@@ -13,7 +13,11 @@ import {
   ConfirmForgotPasswordPost,
 } from "../models/authenticationModels";
 import "reflect-metadata";
-import { BadRequestError } from "../Errors/Errors";
+import {
+  BadRequestError,
+  ExtendedError,
+  InternalServerError,
+} from "../Errors/Errors";
 import { validateOrReject } from "class-validator";
 
 const authManager = new AuthManager();
@@ -21,7 +25,8 @@ const authManager = new AuthManager();
 @JsonController("/auth")
 export class AuthController {
   @Post("/create-user")
-  async createUser(@Body() body: CreateUserPostRequest) {
+  async createUser(@Body() body: CreateUserPostRequest): Promise<object> {
+    //tells TS explicitly that the function will eventually return an object just not immediately
     const request = new CreateUserPost(body);
     try {
       await validateOrReject(request);
@@ -32,11 +37,16 @@ export class AuthController {
         body: e,
       });
     }
-    return authManager.registerUser(body);
+    try {
+      return await authManager.registerUser(body);
+    } catch (e) {
+      if (e instanceof ExtendedError) throw e;
+      throw new InternalServerError({ description: "Something went wrong" });
+    }
   }
 
   @Post("/confirm-user")
-  async confirmUser(@Body() body: ConfirmUserPostRequest) {
+  async confirmUser(@Body() body: ConfirmUserPostRequest): Promise<object> {
     const request = new ConfirmUserPost(body);
     try {
       await validateOrReject(request);
@@ -47,11 +57,16 @@ export class AuthController {
         body: e,
       });
     }
-    return authManager.confirmUser(body);
+    try {
+      return authManager.confirmUser(body);
+    } catch (e) {
+      if (e instanceof ExtendedError) throw e;
+      throw new InternalServerError({ description: "Something went wrong" });
+    }
   }
 
   @Post("/login")
-  async loginUser(@Body() body: LoginPostRequest) {
+  async loginUser(@Body() body: LoginPostRequest): Promise<object> {
     const request = new LoginPost(body);
     try {
       await validateOrReject(request);
@@ -62,11 +77,16 @@ export class AuthController {
         body: e,
       });
     }
-    return authManager.loginUser(body.email, body.password);
+    try {
+      return authManager.loginUser(body.email, body.password);
+    } catch (e) {
+      if (e instanceof ExtendedError) throw e;
+      throw new InternalServerError({ description: "Something went wrong" });
+    }
   }
 
   @Post("/forgot-password")
-  async forgotPassword(@Body() body: ForgotPasswordRequest) {
+  async forgotPassword(@Body() body: ForgotPasswordRequest): Promise<object> {
     const request = new ForgotPasswordPost(body);
     try {
       await validateOrReject(request);
@@ -77,11 +97,18 @@ export class AuthController {
         body: e,
       });
     }
-    return authManager.forgotPassword(body.email);
+    try {
+      return authManager.forgotPassword(body.email);
+    } catch (e) {
+      if (e instanceof ExtendedError) throw e;
+      throw new InternalServerError({ description: "Something went wrong" });
+    }
   }
 
   @Post("/confirm-forgot-password")
-  async confirmForgotPassword(@Body() body: ConfirmForgotPasswordRequest) {
+  async confirmForgotPassword(
+    @Body() body: ConfirmForgotPasswordRequest,
+  ): Promise<object> {
     const request = new ConfirmForgotPasswordPost(body);
     try {
       await validateOrReject(request);
@@ -92,10 +119,15 @@ export class AuthController {
         body: e,
       });
     }
-    return authManager.confirmForgotPassword(
-      body.email,
-      body.code,
-      body.newPassword,
-    );
+    try {
+      return authManager.confirmForgotPassword(
+        body.email,
+        body.code,
+        body.newPassword,
+      );
+    } catch (e) {
+      if (e instanceof ExtendedError) throw e;
+      throw new InternalServerError({ description: "Something went wrong" });
+    }
   }
 }

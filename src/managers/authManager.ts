@@ -38,8 +38,6 @@ export class AuthManager {
         codeDeliveryDetails: response.CodeDeliveryDetails,
       };
     } catch (err: any) {
-      console.log("Cognito error name:", err.name);
-      console.log("Cognito error message:", err.message);
       if (err.name === "UsernameExistsException") {
         throw new BadRequestError({
           description: "An account with this email already exists",

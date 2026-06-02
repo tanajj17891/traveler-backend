@@ -9,7 +9,6 @@ export class HealthController {
 
   @Get("/health")
   getHealth() {
-    console.log("banama");
     // throw new BadRequestError({description: "its a bad request"})
 
     return this.healthManager.healthMessage();

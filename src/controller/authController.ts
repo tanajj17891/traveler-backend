@@ -19,13 +19,17 @@ import {
   InternalServerError,
 } from "../Errors/Errors";
 import { validateOrReject } from "class-validator";
-
+import { CodeDeliveryDetailsType } from "@aws-sdk/client-cognito-identity-provider";
 const authManager = new AuthManager();
 
 @JsonController("/auth")
 export class AuthController {
   @Post("/create-user")
-  async createUser(@Body() body: CreateUserPostRequest): Promise<object> {
+  async createUser(@Body() body: CreateUserPostRequest): Promise<{
+    userSub: string | undefined;
+    userConfirmed: boolean | undefined;
+    codeDeliveryDetails: CodeDeliveryDetailsType | undefined;
+  }> {
     //tells TS explicitly that the function will eventually return an object just not immediately
     const request = new CreateUserPost(body);
     try {
@@ -46,7 +50,9 @@ export class AuthController {
   }
 
   @Post("/confirm-user")
-  async confirmUser(@Body() body: ConfirmUserPostRequest): Promise<object> {
+  async confirmUser(
+    @Body() body: ConfirmUserPostRequest,
+  ): Promise<{ success: boolean }> {
     const request = new ConfirmUserPost(body);
     try {
       await validateOrReject(request);
@@ -66,7 +72,19 @@ export class AuthController {
   }
 
   @Post("/login")
-  async loginUser(@Body() body: LoginPostRequest): Promise<object> {
+  async loginUser(@Body() body: LoginPostRequest): Promise<
+    | {
+        session: string | undefined;
+        challengeName: "SMS_MFA" | "SOFTWARE_TOKEN_MFA" | undefined;
+        message: string;
+      }
+    | {
+        accessToken: string | undefined;
+        idToken: string | undefined;
+        refreshToken: string | undefined;
+        message: string;
+      }
+  > {
     const request = new LoginPost(body);
     try {
       await validateOrReject(request);
@@ -77,6 +95,7 @@ export class AuthController {
         body: e,
       });
     }
+
     try {
       return authManager.loginUser(body.email, body.password);
     } catch (e) {
@@ -86,7 +105,9 @@ export class AuthController {
   }
 
   @Post("/forgot-password")
-  async forgotPassword(@Body() body: ForgotPasswordRequest): Promise<object> {
+  async forgotPassword(
+    @Body() body: ForgotPasswordRequest,
+  ): Promise<{ message: string }> {
     const request = new ForgotPasswordPost(body);
     try {
       await validateOrReject(request);
@@ -108,7 +129,7 @@ export class AuthController {
   @Post("/confirm-forgot-password")
   async confirmForgotPassword(
     @Body() body: ConfirmForgotPasswordRequest,
-  ): Promise<object> {
+  ): Promise<{ message: string }> {
     const request = new ConfirmForgotPasswordPost(body);
     try {
       await validateOrReject(request);

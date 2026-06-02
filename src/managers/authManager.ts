@@ -13,10 +13,6 @@ import {
   CreateUserPostRequest,
 } from "../models/authenticationModels";
 
-const client = new CognitoIdentityProviderClient({
-  region: process.env.COGNITO_REGION,
-});
-
 export class AuthManager {
   async registerUser(input: CreateUserPostRequest) {
     const clientId = process.env.COGNITO_APP_CLIENT_ID;
@@ -169,7 +165,7 @@ export class AuthManager {
     });
 
     try {
-      await client.send(command);
+      await cognitoClient.send(command);
       return { message: "Verification code sent to email" };
     } catch (err: any) {
       if (err.name === "UserNotFoundException") {
@@ -203,7 +199,7 @@ export class AuthManager {
     });
 
     try {
-      await client.send(command);
+      await cognitoClient.send(command);
       return { message: "Password reset successful" };
     } catch (err: any) {
       if (err.name === "CodeMismatchException") {

@@ -1,10 +1,12 @@
-import express from "express";
+import "reflect-metadata";
 import dotenv from "dotenv";
 import { AuthController } from "./controller/authController";
 import { HealthController } from "./controller/healthController";
 import { createExpressServer } from "routing-controllers";
 import serverless from "serverless-http";
 import { ErrorMiddleware } from "./middleware/errorMiddleware";
+import { ProfileController } from "./controller/profileController";
+import { AuthMiddleware } from "./middleware/authMiddleware";
 
 dotenv.config();
 
@@ -18,7 +20,7 @@ const app = createExpressServer({
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   },
-  controllers: [AuthController, HealthController],
+  controllers: [AuthController, HealthController, ProfileController],
   middlewares: [ErrorMiddleware],
   defaultErrorHandler: false,
 });

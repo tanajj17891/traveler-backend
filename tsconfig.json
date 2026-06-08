@@ -6,11 +6,10 @@
     "rootDir": "./src",
     "outDir": "./dist",
     "strict": true,
+    "strictPropertyInitialization": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
-      "emitDecoratorMetadata": true,
-        "experimentalDecorators": true
-
-
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   }
 }

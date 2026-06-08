@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Profile {
+  id          String    @id @default(uuid())
+  cognitoSub  String    @unique
+  firstName   String?
+  lastName    String?
+  email       String    @unique
+  gender      String?
+  dateOfBirth String?
+  state       String?
+  city        String?
+  travelStyle TravelStyle[]
+  preferences TravelPreference[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+enum TravelStyle {
+  BEACH_AND_SUN
+  ADVENTURE
+  CITY_BREAKS
+  FOOD_AND_DRINK
+  CULTURE_AND_ART
+  ECO_TRAVEL
+  BUSINESS
+  ROMANTIC
+  WINTER_SPORTS
+  PHOTOGRAPHY
+}
+
+enum TravelPreference {
+  SOLO_TRAVELER
+  TRAVELING_WITH_KIDS
+  BUDGET_CONSCIOUS
+}

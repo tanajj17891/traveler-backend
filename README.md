@@ -79,3 +79,17 @@
 
 - class-validator is the receptionist who checks if you filled out the form correctly before it goes anywhere. Missing your name? Sent back instantly.
 - Cognito runtime errors are what happens after the form is submitted and HR actually reviews it. Everything was filled out, but your references didn't check out.
+
+# Backend connection to my supabase database
+
+- Schema is defined in prisma/schema.prisma with a Profile model containing:
+- id — auto generated UUID
+- cognitoSub — unique identifier from Cognito (links profile to logged in user)
+- firstName, lastName, email, gender, dateOfBirth, state, city
+- travelStyle — array of enums (BEACH_AND_SUN, ADVENTURE, CITY_BREAKS, etc.)
+- preferences — array of enums (SOLO_TRAVELER, TRAVELING_WITH_KIDS, BUDGET_CONSCIOUS)
+- createdAt, updatedAt — auto managed timestamps
+
+# What is CognitoSub
+
+- cognitoSub is the unique ID that Cognito assigns to every user when they sign up. It's like a user ID — we use it to link the profile in our database to the logged in Cognito user. When someone logs in, their access token contains their cognitoSub, so we can look up their profile.

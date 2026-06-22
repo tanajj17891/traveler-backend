@@ -8,14 +8,15 @@ dotenv.config(); // loads the env file
 const verifier = CognitoJwtVerifier.create({
   userPoolId: process.env.COGNITO_USER_POOL_ID!,
   tokenUse: "access", // validates access token
-  clientId: process.env.COGNITO_CLIENT_ID!,
+  clientId: process.env.COGNITO_APP_CLIENT_ID!,
 }); // creates a token validator, checks if token belongs to user pool
 
 @Middleware({ type: "before" })
 export class AuthMiddleware implements ExpressMiddlewareInterface {
   async use(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
-      const authHeader = req.headers.authorization; // looks for auth bearer token
+      const authHeader = req.headers.authorization;
+      // looks for auth bearer token
 
       if (!authHeader || !authHeader.startsWith("Bearer ")) {
         return res.status(401).json({ message: "No token provided" });
@@ -27,7 +28,8 @@ export class AuthMiddleware implements ExpressMiddlewareInterface {
 
       (req as any).user = payload;
       next();
-    } catch {
+    } catch (err) {
+      console.log(err);
       return res.status(401).json({ message: "Invalid token" });
     }
   }

@@ -27,18 +27,7 @@ export class ProfileManager {
       }
 
       const profile = await prisma.profile.create({
-        data: {
-          cognitoSub: input.cognitoSub,
-          email: input.email,
-          firstName: input.firstName,
-          lastName: input.lastName,
-          gender: input.gender,
-          state: input.state,
-          city: input.city,
-          travelStyle: input.travelStyle,
-          preferences: input.preferences,
-          dateOfBirth: input.dateOfBirth,
-        },
+        data: input,
       });
 
       return profile;

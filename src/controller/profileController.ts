@@ -5,7 +5,7 @@ import {
   Post,
   Delete,
   Put,
-  Param,
+  Params,
   UseBefore,
   Get,
 } from "routing-controllers";
@@ -14,6 +14,8 @@ import {
   UpdateProfileRequest,
   UpdateProfilePost,
   CreateProfileRequest,
+  ProfileResponse,
+  ProfileParams,
 } from "../models/profileModels";
 import "reflect-metadata";
 import {
@@ -22,7 +24,6 @@ import {
   InternalServerError,
 } from "../Errors/Errors";
 import { validateOrReject } from "class-validator";
-import { TravelStyle, TravelPreference } from "@prisma/client";
 import { AuthMiddleware } from "../middleware/authMiddleware";
 
 const profileManager = new ProfileManager();
@@ -31,18 +32,9 @@ const profileManager = new ProfileManager();
 @UseBefore(AuthMiddleware)
 export class ProfileController {
   @Post()
-  async createProfile(@Body() body: CreateProfileRequest): Promise<{
-    cognitoSub: string | null;
-    firstName?: string | null;
-    lastName?: string | null;
-    email: string | null;
-    gender?: string | null;
-    dateOfBirth?: Date | null;
-    state?: string | null;
-    city?: string | null;
-    travelStyle?: TravelStyle[];
-    preferences?: TravelPreference[];
-  }> {
+  async createProfile(
+    @Body() body: CreateProfileRequest,
+  ): Promise<ProfileResponse> {
     const request = new CreateProfilePost(body);
     try {
       await validateOrReject(request);
@@ -63,9 +55,9 @@ export class ProfileController {
     }
   }
 
-  @Put("/:cognitoSub")
+  @Put("/:cognitosub")
   async updateProfile(
-    @Param("cognitoSub") cognitoSub: string,
+    @Params() Params: ProfileParams,
     @Body() body: UpdateProfileRequest,
   ) {
     const request = new UpdateProfilePost(body);
@@ -80,7 +72,7 @@ export class ProfileController {
     }
 
     try {
-      return await profileManager.updateProfile(cognitoSub, body);
+      return await profileManager.updateProfile(Params.cognitoSub, body);
     } catch (e) {
       if (e instanceof ExtendedError) throw e;
 
@@ -89,10 +81,10 @@ export class ProfileController {
       });
     }
   }
-  @Delete("/:cognitoSub")
-  async deleteProfile(@Param("cognitoSub") cognitoSub: string) {
+  @Delete("/:cognitosub")
+  async deleteProfile(@Params() Params: ProfileParams) {
     try {
-      return await profileManager.deleteProfile(cognitoSub);
+      return await profileManager.deleteProfile(Params.cognitoSub);
     } catch (e) {
       if (e instanceof ExtendedError) throw e;
 
@@ -101,10 +93,10 @@ export class ProfileController {
       });
     }
   }
-  @Get("/:cognitoSub")
-  async getProfile(@Param("cognitoSub") cognitoSub: string) {
+  @Get("/:cognitosub")
+  async getProfile(@Params() Params: ProfileParams) {
     try {
-      return await profileManager.getProfile(cognitoSub);
+      return await profileManager.getProfile(Params.cognitoSub);
     } catch (e) {
       if (e instanceof ExtendedError) throw e;
 

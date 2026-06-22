@@ -1,4 +1,10 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsEnum } from "class-validator";
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsEnum,
+  IsUUID,
+} from "class-validator";
 import { TravelStyle, TravelPreference } from "@prisma/client";
 
 // Request Types
@@ -27,10 +33,28 @@ export type UpdateProfileRequest = {
   preferences?: TravelPreference[];
 };
 
+export interface ProfileResponse {
+  cognitoSub: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  email: string;
+  gender?: string | null;
+  dateOfBirth?: string | null;
+  state?: string | null;
+  city?: string | null;
+  travelStyle?: TravelStyle[];
+  preferences?: TravelPreference[];
+}
+export class ProfileParams {
+  @IsUUID()
+  cognitoSub!: string;
+}
+
 // Create Profile Validator
 
 export class CreateProfilePost {
   @IsNotEmpty({ message: "CognitoSub is required" })
+  @IsUUID()
   cognitoSub: string;
 
   @IsNotEmpty({ message: "Email is required" })

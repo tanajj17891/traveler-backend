@@ -41,3 +41,23 @@ enum TravelPreference {
   TRAVELING_WITH_KIDS
   BUDGET_CONSCIOUS
 }
+
+model Trip {
+  id          String   @id @default(uuid())
+  cognitoSub  String
+  destination String
+  country     String
+  startDate   DateTime
+  endDate     DateTime
+  travelers   Int?
+  budget      Float?
+  status      TripStatus @default(UPCOMING)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum TripStatus {
+  UPCOMING
+  PLANNING
+  PAST
+}

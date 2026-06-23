@@ -5,7 +5,7 @@ import {
   Post,
   Delete,
   Put,
-  Params,
+  Param, // Changed from Params to Param for individual path variables
   UseBefore,
   Get,
 } from "routing-controllers";
@@ -15,7 +15,6 @@ import {
   UpdateProfilePost,
   CreateProfileRequest,
   ProfileResponse,
-  ProfileParams,
 } from "../models/profileModels";
 import "reflect-metadata";
 import {
@@ -23,7 +22,7 @@ import {
   ExtendedError,
   InternalServerError,
 } from "../Errors/Errors";
-import { validateOrReject } from "class-validator";
+import { isUUID, validateOrReject } from "class-validator";
 import { AuthMiddleware } from "../middleware/authMiddleware";
 
 const profileManager = new ProfileManager();
@@ -44,25 +43,23 @@ export class ProfileController {
         info: e.info,
         body: e,
       });
-      // same validation error pattern as authController
     }
-
     try {
       return await profileManager.createProfile(body);
     } catch (e) {
       if (e instanceof ExtendedError) throw e;
-      throw new InternalServerError({ description: "Something went wrong" }); // same general error pattern as authController
+      throw new InternalServerError({ description: "Something went wrong" });
     }
   }
 
   @Put("/:cognitosub")
   async updateProfile(
-    @Params() Params: ProfileParams,
+    @Param("cognitosub") cognitosub: string,
     @Body() body: UpdateProfileRequest,
   ) {
     const request = new UpdateProfilePost(body);
-
     try {
+      isUUID(cognitosub);
       await validateOrReject(request);
     } catch (e: any) {
       throw new BadRequestError({
@@ -70,39 +67,34 @@ export class ProfileController {
         body: e,
       });
     }
-
     try {
-      return await profileManager.updateProfile(Params.cognitoSub, body);
+      return await profileManager.updateProfile(cognitosub, body);
     } catch (e) {
       if (e instanceof ExtendedError) throw e;
-
-      throw new InternalServerError({
-        description: "Something went wrong",
-      });
+      throw new InternalServerError({ description: "Something went wrong" });
     }
   }
+
   @Delete("/:cognitosub")
-  async deleteProfile(@Params() Params: ProfileParams) {
+  async deleteProfile(@Param("cognitosub") cognitosub: string) {
     try {
-      return await profileManager.deleteProfile(Params.cognitoSub);
+      // validate cognitosub for a valid uuid
+      isUUID(cognitosub);
+      return await profileManager.deleteProfile(cognitosub);
     } catch (e) {
       if (e instanceof ExtendedError) throw e;
-
-      throw new InternalServerError({
-        description: "Something went wrong",
-      });
+      throw new InternalServerError({ description: "Something went wrong" });
     }
   }
+
   @Get("/:cognitosub")
-  async getProfile(@Params() Params: ProfileParams) {
+  async getProfile(@Param("cognitosub") cognitosub: string) {
     try {
-      return await profileManager.getProfile(Params.cognitoSub);
+      isUUID(cognitosub);
+      return await profileManager.getProfile(cognitosub);
     } catch (e) {
       if (e instanceof ExtendedError) throw e;
-
-      throw new InternalServerError({
-        description: "Something went wrong",
-      });
+      throw new InternalServerError({ description: "Something went wrong" });
     }
   }
 }

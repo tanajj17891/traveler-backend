@@ -7,7 +7,6 @@ import {
 } from "../Errors/Errors";
 import {
   CreateProfileRequest,
-  UpdateProfilePost,
   UpdateProfileRequest,
 } from "../models/profileModels";
 

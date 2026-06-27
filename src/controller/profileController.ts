@@ -5,9 +5,10 @@ import {
   Post,
   Delete,
   Put,
-  Params,
+  Param,
   UseBefore,
   Get,
+  QueryParam,
 } from "routing-controllers";
 import {
   CreateProfilePost,
@@ -15,7 +16,6 @@ import {
   UpdateProfilePost,
   CreateProfileRequest,
   ProfileResponse,
-  ProfileParams,
 } from "../models/profileModels";
 import "reflect-metadata";
 import {
@@ -35,6 +35,7 @@ export class ProfileController {
   async createProfile(
     @Body() body: CreateProfileRequest,
   ): Promise<ProfileResponse> {
+    console.log(body);
     const request = new CreateProfilePost(body);
     try {
       await validateOrReject(request);
@@ -55,9 +56,9 @@ export class ProfileController {
     }
   }
 
-  @Put("/:cognitosub")
+  @Put("/:profileid")
   async updateProfile(
-    @Params() Params: ProfileParams,
+    @Param("profileid") profileId: string,
     @Body() body: UpdateProfileRequest,
   ) {
     const request = new UpdateProfilePost(body);
@@ -72,7 +73,7 @@ export class ProfileController {
     }
 
     try {
-      return await profileManager.updateProfile(Params.cognitoSub, body);
+      return await profileManager.updateProfile(profileId, body);
     } catch (e) {
       if (e instanceof ExtendedError) throw e;
 
@@ -81,10 +82,10 @@ export class ProfileController {
       });
     }
   }
-  @Delete("/:cognitosub")
-  async deleteProfile(@Params() Params: ProfileParams) {
+  @Delete("/:profileid")
+  async deleteProfile(@Param("profileid") profileId: string) {
     try {
-      return await profileManager.deleteProfile(Params.cognitoSub);
+      return await profileManager.deleteProfile(profileId);
     } catch (e) {
       if (e instanceof ExtendedError) throw e;
 
@@ -93,10 +94,14 @@ export class ProfileController {
       });
     }
   }
-  @Get("/:cognitosub")
-  async getProfile(@Params() Params: ProfileParams) {
+
+  // /profile?email={email}
+  @Get()
+  async getProfile(@QueryParam("email") email: string) {
     try {
-      return await profileManager.getProfile(Params.cognitoSub);
+      console.log(email);
+      console.log("here");
+      return await profileManager.getProfile(email);
     } catch (e) {
       if (e instanceof ExtendedError) throw e;
 

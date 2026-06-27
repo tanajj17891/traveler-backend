@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Profile {
-  id          String    @id @default(uuid())
+  profileId          String    @id @default(uuid())
   cognitoSub  String    @unique
   firstName   String?
   lastName    String?
@@ -21,6 +21,7 @@ model Profile {
   preferences TravelPreference[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  trips       Trip[]
 }
 
 enum TravelStyle {
@@ -43,21 +44,27 @@ enum TravelPreference {
 }
 
 model Trip {
-  id          String   @id @default(uuid())
-  cognitoSub  String
-  destination String
-  country     String
-  startDate   DateTime
-  endDate     DateTime
-  travelers   Int?
-  budget      Float?
-  status      TripStatus @default(UPCOMING)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  tripId     String   @id @default(uuid())
+
+  profileId  String
+  profile     Profile  @relation(fields: [profileId], references: [profileId])
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  tripName   String
+  destination Json[]
+  travelers   String[]
+  budget      Json?
+  notes       Json[]
+
+  status      TripStatus @default(PLANNING)
 }
 
 enum TripStatus {
-  UPCOMING
   PLANNING
-  PAST
+  UPCOMING
+  IN_PROGRESS
+  COMPLETED
 }
+

@@ -40,11 +40,13 @@ export class ProfileManager {
     }
   }
 
-  async getProfile(cognitoSub: string) {
+  async getProfile(email: string) {
     try {
+      console.log(email);
       const profile = await prisma.profile.findUnique({
-        where: { cognitoSub },
+        where: { email },
       });
+      console.log("now im here");
       if (!profile) {
         throw new NotFoundError({ description: "Profile not found" });
       }
@@ -53,37 +55,39 @@ export class ProfileManager {
       {
         if (e instanceof ExtendedError) throw e;
         throw new InternalServerError({
-          description: "Failed to create profile",
+          description: "Failed to get profile",
         });
       }
     }
   }
 
-  async updateProfile(cognitoSub: string, input: UpdateProfileRequest) {
+  async updateProfile(profileId: string, input: UpdateProfileRequest) {
     try {
       const profile = await prisma.profile.findUnique({
-        where: { cognitoSub },
+        where: { profileId },
       });
+      console.log("here");
       if (!profile) {
         throw new NotFoundError({ description: "Profile not found" });
       }
       const updated = await prisma.profile.update({
-        where: { cognitoSub },
+        where: { profileId },
         data: input,
       });
 
       return updated;
     } catch (e) {
+      console.log(e);
       if (e instanceof ExtendedError) throw e;
       throw new InternalServerError({
         description: "Failed to update profile",
       });
     }
   }
-  async deleteProfile(cognitoSub: string) {
+  async deleteProfile(profileId: string) {
     try {
       const profile = await prisma.profile.findUnique({
-        where: { cognitoSub },
+        where: { id: profileId },
       });
 
       if (!profile) {
@@ -91,7 +95,7 @@ export class ProfileManager {
       }
 
       await prisma.profile.delete({
-        where: { cognitoSub },
+        where: { id: profileId },
       });
 
       return { message: "Profile deleted successfully" };

@@ -4,6 +4,7 @@ import {
   IsOptional,
   IsEnum,
   IsUUID,
+  Matches,
 } from "class-validator";
 import { TravelStyle, TravelPreference } from "@prisma/client";
 
@@ -45,16 +46,14 @@ export interface ProfileResponse {
   travelStyle?: TravelStyle[];
   preferences?: TravelPreference[];
 }
-export class ProfileParams {
-  @IsUUID()
-  cognitoSub!: string;
-}
 
 // Create Profile Validator
 
 export class CreateProfilePost {
   @IsNotEmpty({ message: "CognitoSub is required" })
-  @IsUUID()
+  @Matches(/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[0-9a-f]{4}-[0-9a-f]{12}$/i, {
+    message: "id must be a valid UUID v7",
+  })
   cognitoSub: string;
 
   @IsNotEmpty({ message: "Email is required" })

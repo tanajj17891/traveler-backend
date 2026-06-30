@@ -8,8 +8,8 @@ import {
 import { TripStatus } from "@prisma/client";
 
 export type CreateTripRequest = {
-  profile_id: string;
-  trip_name: string;
+  profileId: string;
+  tripName: string;
   destination: string[];
   travelers: string[];
   budget?: object;
@@ -18,7 +18,7 @@ export type CreateTripRequest = {
 };
 
 export interface TripReponse {
-  profile_id: string;
+  profileId: string;
   trip_name: string;
   destination: string[];
   travelers: string[];
@@ -28,7 +28,7 @@ export interface TripReponse {
 }
 
 export type UpdateTripRequest = {
-  trip_name?: string;
+  tripName?: string;
   destination: string[];
   travelers: string[];
   budget?: object;
@@ -38,7 +38,7 @@ export type UpdateTripRequest = {
 
 export class CreateTripPost {
   @IsUUID()
-  profile_id: string;
+  profileId: string;
 
   @IsNotEmpty()
   @IsString()
@@ -57,8 +57,8 @@ export class CreateTripPost {
   notes: string[];
 
   constructor(data: CreateTripRequest) {
-    this.profile_id = data.profile_id;
-    this.trip_name = data.trip_name;
+    this.profileId = data.profileId;
+    this.trip_name = data.tripName;
     this.destination = data.destination;
     this.travelers = data.travelers;
     this.budget = data.budget;

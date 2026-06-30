@@ -19,22 +19,22 @@ export class TripManager {
       data: input,
     });
   }
-  async getTrip(trip_id: string) {
+  async getTrip(tripId: string) {
     return prisma.trip.findUnique({
-      where: { trip_id },
+      where: { tripId },
     });
   }
 
-  async updateTrip(trip_id: string, input: UpdateTripRequest) {
+  async updateTrip(tripId: string, input: UpdateTripRequest) {
     return prisma.trip.update({
-      where: { trip_id },
+      where: { tripId },
       data: input,
     });
   }
 
-  async deleteTrip(trip_id: string) {
+  async deleteTrip(tripId: string) {
     await prisma.trip.delete({
-      where: { trip_id },
+      where: { tripId },
     });
     return { message: "Trip deleted successfully." };
   }

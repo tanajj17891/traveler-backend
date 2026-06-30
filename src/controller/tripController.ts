@@ -19,7 +19,7 @@ import { AuthMiddleware } from "../middleware/authMiddleware";
 
 const tripManager = new TripManager();
 
-JsonController("/trips");
+@JsonController("/trips")
 @UseBefore(AuthMiddleware)
 export class TripController {
   @Post()
@@ -30,21 +30,21 @@ export class TripController {
     return tripManager.createTrip(body);
   }
 
-  @Get("/:trip_id")
-  async getTrip(@Param("trip_id") trip_id: string) {
-    return tripManager.getTrip(trip_id);
+  @Get("/:tripId")
+  async getTrip(@Param("tripId") tripId: string) {
+    return tripManager.getTrip(tripId);
   }
 
-  @Put(":/trip_id")
+  @Put("/:tripId")
   async updateTrip(
-    @Param("trip_id") trip_id: string,
+    @Param("tripId") tripId: string,
     @Body() body: UpdateTripRequest,
   ) {
-    return tripManager.updateTrip(trip_id, body);
+    return tripManager.updateTrip(tripId, body);
   }
 
-  @Delete("/:trip_id")
-  async deleteTrip(@Param("trip_id") trip_id: string) {
-    return tripManager.deleteTrip(trip_id);
+  @Delete("/:tripId")
+  async deleteTrip(@Param("tripId") tripId: string) {
+    return tripManager.deleteTrip(tripId);
   }
 }

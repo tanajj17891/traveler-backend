@@ -7,7 +7,6 @@ import {
 } from "../Errors/Errors";
 import {
   CreateProfileRequest,
-  UpdateProfilePost,
   UpdateProfileRequest,
 } from "../models/profileModels";
 
@@ -87,7 +86,7 @@ export class ProfileManager {
   async deleteProfile(profileId: string) {
     try {
       const profile = await prisma.profile.findUnique({
-        where: { id: profileId },
+        where: { profileId: profileId },
       });
 
       if (!profile) {
@@ -95,7 +94,7 @@ export class ProfileManager {
       }
 
       await prisma.profile.delete({
-        where: { id: profileId },
+        where: { profileId: profileId },
       });
 
       return { message: "Profile deleted successfully" };

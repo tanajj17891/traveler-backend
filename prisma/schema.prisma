@@ -58,13 +58,6 @@ model Trip {
   budget      Json?
   notes       Json[]
 
-  status      TripStatus @default(PLANNING)
-}
-
-enum TripStatus {
-  PLANNING
-  UPCOMING
-  IN_PROGRESS
-  COMPLETED
+  status      String?
 }
 

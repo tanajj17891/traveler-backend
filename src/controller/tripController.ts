@@ -12,8 +12,14 @@ import {
 import {
   CreateTripPost,
   CreateTripRequest,
+  UpdateTripBody,
   UpdateTripRequest,
 } from "../models/tripModels";
+import {
+  BadRequestError,
+  ExtendedError,
+  InternalServerError,
+} from "../Errors/Errors";
 import { validateOrReject } from "class-validator";
 import { AuthMiddleware } from "../middleware/authMiddleware";
 
@@ -25,14 +31,38 @@ export class TripController {
   @Post()
   async createTrip(@Body() body: CreateTripRequest) {
     const request = new CreateTripPost(body);
-    await validateOrReject(request);
 
-    return tripManager.createTrip(body);
+    try {
+      await validateOrReject(request);
+    } catch (e: any) {
+      throw new BadRequestError({
+        description: "Validation Error",
+        body: e,
+      });
+    }
+
+    try {
+      return await tripManager.createTrip(body);
+    } catch (e) {
+      if (e instanceof ExtendedError) throw e;
+
+      throw new InternalServerError({
+        description: "Something went wrong",
+      });
+    }
   }
 
   @Get("/:tripId")
   async getTrip(@Param("tripId") tripId: string) {
-    return tripManager.getTrip(tripId);
+    try {
+      return await tripManager.getTrip(tripId);
+    } catch (e) {
+      if (e instanceof ExtendedError) throw e;
+
+      throw new InternalServerError({
+        description: "Something went wrong",
+      });
+    }
   }
 
   @Put("/:tripId")
@@ -40,11 +70,38 @@ export class TripController {
     @Param("tripId") tripId: string,
     @Body() body: UpdateTripRequest,
   ) {
-    return tripManager.updateTrip(tripId, body);
+    const request = new UpdateTripBody(body);
+
+    try {
+      await validateOrReject(request);
+    } catch (e: any) {
+      throw new BadRequestError({
+        description: "Validation Error",
+        body: e,
+      });
+    }
+
+    try {
+      return await tripManager.updateTrip(tripId, body);
+    } catch (e) {
+      if (e instanceof ExtendedError) throw e;
+
+      throw new InternalServerError({
+        description: "Something went wrong",
+      });
+    }
   }
 
   @Delete("/:tripId")
   async deleteTrip(@Param("tripId") tripId: string) {
-    return tripManager.deleteTrip(tripId);
+    try {
+      return await tripManager.deleteTrip(tripId);
+    } catch (e) {
+      if (e instanceof ExtendedError) throw e;
+
+      throw new InternalServerError({
+        description: "Something went wrong",
+      });
+    }
   }
 }

@@ -4,36 +4,48 @@ import {
   IsOptional,
   IsString,
   IsNotEmpty,
+  IsEnum,
 } from "class-validator";
-import { TripStatus } from "@prisma/client";
+
+enum TripStatus {
+  PLANNING = "PLANNING",
+  UPCOMING = "UPCOMING",
+  IN_PROGRESS = "IN_PROGRESS",
+  COMPLETED = "COMPLETED",
+}
+export type Destination = {
+  name: string;
+  latitude: number;
+  longitude: number;
+};
 
 export type CreateTripRequest = {
   profileId: string;
   tripName: string;
-  destination: string[];
+  destination: Destination[];
   travelers: string[];
   budget?: object;
   notes: string[];
-  satus?: TripStatus;
+  status?: TripStatus;
 };
 
-export interface TripReponse {
+export interface TripResponse {
   profileId: string;
-  trip_name: string;
-  destination: string[];
+  tripName: string;
+  destination: Destination[];
   travelers: string[];
   budget?: object;
   notes: string[];
-  satus?: TripStatus;
+  status?: TripStatus;
 }
 
 export type UpdateTripRequest = {
   tripName?: string;
-  destination: string[];
-  travelers: string[];
+  destination?: Destination[];
+  travelers?: string[];
   budget?: object;
   notes?: string[];
-  satus?: TripStatus[];
+  status?: TripStatus;
 };
 
 export class CreateTripPost {
@@ -42,10 +54,10 @@ export class CreateTripPost {
 
   @IsNotEmpty()
   @IsString()
-  trip_name: string;
+  tripName: string;
 
   @IsArray()
-  destination: string[];
+  destination: Destination[];
 
   @IsArray()
   travelers: string[];
@@ -56,12 +68,50 @@ export class CreateTripPost {
   @IsArray()
   notes: string[];
 
+  @IsEnum(TripStatus)
+  status: TripStatus;
+
   constructor(data: CreateTripRequest) {
     this.profileId = data.profileId;
-    this.trip_name = data.tripName;
+    this.tripName = data.tripName;
     this.destination = data.destination;
     this.travelers = data.travelers;
     this.budget = data.budget;
     this.notes = data.notes;
+    this.status = data.status ? data.status : TripStatus.PLANNING;
+  }
+}
+
+export class UpdateTripBody {
+  @IsString()
+  @IsOptional()
+  tripName?: string;
+
+  @IsArray()
+  @IsOptional()
+  destination?: Destination[];
+
+  @IsArray()
+  @IsOptional()
+  travelers?: string[];
+
+  @IsOptional()
+  budget?: object;
+
+  @IsArray()
+  @IsOptional()
+  notes?: string[];
+
+  @IsEnum(TripStatus)
+  @IsOptional()
+  status?: TripStatus;
+
+  constructor(data: UpdateTripRequest) {
+    this.tripName = data.tripName;
+    this.destination = data.destination;
+    this.travelers = data.travelers;
+    this.budget = data.budget;
+    this.notes = data.notes;
+    this.status = data.status;
   }
 }

@@ -50,6 +50,24 @@ export class TripManager {
       });
     }
   }
+  async getTripsByProfileId(profileId: string) {
+    try {
+      const trips = await prisma.trip.findMany({
+        where: { profileId },
+        orderBy: { createdAt: "desc" },
+      });
+
+      return trips;
+    } catch (e) {
+      console.error("TRIP ERROR:", e);
+
+      if (e instanceof ExtendedError) throw e;
+
+      throw new InternalServerError({
+        description: "Failed to get trips",
+      });
+    }
+  }
 
   async updateTrip(tripId: string, input: UpdateTripRequest) {
     try {

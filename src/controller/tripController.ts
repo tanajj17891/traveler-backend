@@ -104,4 +104,16 @@ export class TripController {
       });
     }
   }
+  @Get("/profile/:profileId")
+  async getTripsByProfileId(@Param("profileId") profileId: string) {
+    try {
+      return await tripManager.getTripsByProfileId(profileId);
+    } catch (e) {
+      if (e instanceof ExtendedError) throw e;
+
+      throw new InternalServerError({
+        description: "Something went wrong",
+      });
+    }
+  }
 }

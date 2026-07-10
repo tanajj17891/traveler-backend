@@ -31,7 +31,7 @@ export class TripController {
   @Post()
   async createTrip(@Body() body: CreateTripRequest) {
     const request = new CreateTripPost(body);
-
+    console.log("POST /trips controller received:", body);
     try {
       await validateOrReject(request);
     } catch (e: any) {
@@ -43,19 +43,6 @@ export class TripController {
 
     try {
       return await tripManager.createTrip(body);
-    } catch (e) {
-      if (e instanceof ExtendedError) throw e;
-
-      throw new InternalServerError({
-        description: "Something went wrong",
-      });
-    }
-  }
-
-  @Get("/:tripId")
-  async getTrip(@Param("tripId") tripId: string) {
-    try {
-      return await tripManager.getTrip(tripId);
     } catch (e) {
       if (e instanceof ExtendedError) throw e;
 
@@ -104,10 +91,24 @@ export class TripController {
       });
     }
   }
-  @Get("/profile/:profileId")
+  @Get("/by-profile/:profileId") //gets all trips by propfile id
   async getTripsByProfileId(@Param("profileId") profileId: string) {
+    console.log("GET /trips/by-profile called with:", profileId);
     try {
       return await tripManager.getTripsByProfileId(profileId);
+    } catch (e) {
+      if (e instanceof ExtendedError) throw e;
+
+      throw new InternalServerError({
+        description: "Something went wrong",
+      });
+    }
+  }
+
+  @Get("/by-id/:tripId")
+  async getTrip(@Param("tripId") tripId: string) {
+    try {
+      return await tripManager.getTrip(tripId);
     } catch (e) {
       if (e instanceof ExtendedError) throw e;
 

@@ -45,12 +45,6 @@ export interface ProfileResponse {
   travelStyle?: TravelStyle[];
   preferences?: TravelPreference[];
 }
-export class ProfileParams {
-  @IsUUID()
-  cognitoSub!: string;
-}
-
-// Create Profile Validator
 
 export class CreateProfilePost {
   @IsNotEmpty({ message: "CognitoSub is required" })

@@ -5,7 +5,7 @@ import {
   Post,
   Delete,
   Put,
-  Param,
+  Param, // Changed from Params to Param for individual path variables
   UseBefore,
   Get,
   QueryParam,
@@ -23,7 +23,7 @@ import {
   ExtendedError,
   InternalServerError,
 } from "../Errors/Errors";
-import { validateOrReject } from "class-validator";
+import { isUUID, validateOrReject } from "class-validator";
 import { AuthMiddleware } from "../middleware/authMiddleware";
 
 const profileManager = new ProfileManager();
@@ -45,14 +45,12 @@ export class ProfileController {
         info: e.info,
         body: e,
       });
-      // same validation error pattern as authController
     }
-
     try {
       return await profileManager.createProfile(body);
     } catch (e) {
       if (e instanceof ExtendedError) throw e;
-      throw new InternalServerError({ description: "Something went wrong" }); // same general error pattern as authController
+      throw new InternalServerError({ description: "Something went wrong" });
     }
   }
 
@@ -62,8 +60,8 @@ export class ProfileController {
     @Body() body: UpdateProfileRequest,
   ) {
     const request = new UpdateProfilePost(body);
-
     try {
+      isUUID(profileId);
       await validateOrReject(request);
     } catch (e: any) {
       throw new BadRequestError({
@@ -71,15 +69,11 @@ export class ProfileController {
         body: e,
       });
     }
-
     try {
       return await profileManager.updateProfile(profileId, body);
     } catch (e) {
       if (e instanceof ExtendedError) throw e;
-
-      throw new InternalServerError({
-        description: "Something went wrong",
-      });
+      throw new InternalServerError({ description: "Something went wrong" });
     }
   }
   @Delete("/:profileid")
@@ -88,10 +82,7 @@ export class ProfileController {
       return await profileManager.deleteProfile(profileId);
     } catch (e) {
       if (e instanceof ExtendedError) throw e;
-
-      throw new InternalServerError({
-        description: "Something went wrong",
-      });
+      throw new InternalServerError({ description: "Something went wrong" });
     }
   }
 
@@ -104,10 +95,7 @@ export class ProfileController {
       return await profileManager.getProfile(email);
     } catch (e) {
       if (e instanceof ExtendedError) throw e;
-
-      throw new InternalServerError({
-        description: "Something went wrong",
-      });
+      throw new InternalServerError({ description: "Something went wrong" });
     }
   }
 }

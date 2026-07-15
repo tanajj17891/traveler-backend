@@ -35,7 +35,6 @@ export class ProfileController {
   async createProfile(
     @Body() body: CreateProfileRequest,
   ): Promise<ProfileResponse> {
-    console.log(body);
     const request = new CreateProfilePost(body);
     try {
       await validateOrReject(request);
@@ -90,8 +89,6 @@ export class ProfileController {
   @Get()
   async getProfile(@QueryParam("email") email: string) {
     try {
-      console.log(email);
-      console.log("here");
       return await profileManager.getProfile(email);
     } catch (e) {
       if (e instanceof ExtendedError) throw e;

@@ -41,11 +41,10 @@ export class ProfileManager {
 
   async getProfile(email: string) {
     try {
-      console.log(email);
       const profile = await prisma.profile.findUnique({
         where: { email },
       });
-      console.log("now im here");
+
       if (!profile) {
         throw new NotFoundError({ description: "Profile not found" });
       }
@@ -65,7 +64,7 @@ export class ProfileManager {
       const profile = await prisma.profile.findUnique({
         where: { profileId },
       });
-      console.log("here");
+
       if (!profile) {
         throw new NotFoundError({ description: "Profile not found" });
       }
@@ -76,7 +75,6 @@ export class ProfileManager {
 
       return updated;
     } catch (e) {
-      console.log(e);
       if (e instanceof ExtendedError) throw e;
       throw new InternalServerError({
         description: "Failed to update profile",

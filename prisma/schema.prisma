@@ -46,7 +46,7 @@ enum TravelPreference {
 model Trip {
   tripId     String   @id @default(uuid())
 
-  profileId  String
+  profileId  String 
   profile     Profile  @relation(fields: [profileId], references: [profileId])
 
   createdAt  DateTime @default(now())

@@ -5,89 +5,58 @@ import {
   NotFoundError,
   BadRequestError,
 } from "../Errors/Errors";
-import { CreateTripRequest, UpdateTripRequest } from "../models/tripModels";
+import {
+  Budget,
+  CreateTripPost,
+  CreateTripRequest,
+  Destination,
+  TripResponse,
+  UpdateTripRequest,
+} from "../models/tripModels";
 
 const prisma = new PrismaClient();
 
 export class TripManager {
-  async createTrip(input: CreateTripRequest) {
+  async createTrip(input: CreateTripPost): Promise<TripResponse> {
     try {
-      console.log("Raw traveler emails:", input.travelers);
+      let travelerProfileIds: string[] = [];
 
-      if (!Array.isArray(input.travelers)) {
-        /* Checks that the traveler data is a valid list (array) of text and reejects the request if any email is completely blank. */
-        throw new BadRequestError({
-          description: "Travelers must be an array of email addresses",
+      if (input.travelers && input.travelers.length > 0) {
+        const travelerEmailAndProfileId = await prisma.profile.findMany({
+          where: {
+            OR: input.travelers.map((email) => ({
+              email: {
+                equals: email,
+                mode: "insensitive",
+              },
+            })),
+          },
+          select: {
+            profileId: true,
+            email: true,
+          },
+        });
+        travelerEmailAndProfileId.forEach((emailAndProfileId) => {
+          travelerProfileIds.push(emailAndProfileId.profileId);
         });
       }
 
-      const hasEmptyTraveler = input.travelers.some(
-        (email) => typeof email !== "string" || email.trim().length === 0,
-      );
-
-      if (hasEmptyTraveler) {
+      if (travelerProfileIds.length !== input?.travelers?.length) {
         throw new BadRequestError({
-          description: "Traveler email cannot be empty",
-        });
-      }
-
-      const normalizedTravelerEmails = [
-        ...new Set(input.travelers.map((email) => email.trim().toLowerCase())),
-      ];
-
-      console.log("Normalized traveler emails:", normalizedTravelerEmails);
-
-      const travelerProfiles = // Takes the cleaned list of emails and searches the database (prisma.profile) to see if these users already exist.
-        normalizedTravelerEmails.length > 0
-          ? await prisma.profile.findMany({
-              where: {
-                OR: normalizedTravelerEmails.map((email) => ({
-                  email: {
-                    equals: email,
-                    mode: "insensitive",
-                  },
-                })),
-              },
-              select: {
-                profileId: true,
-                email: true,
-              },
-            })
-          : [];
-
-      console.log("Traveler profiles found:", travelerProfiles);
-
-      const foundEmails = new Set(
-        travelerProfiles.map(
-          (
-            profile, // It creates a clean checklist of lowercase emails found in the database to easily spot which ones are missing.
-          ) => profile.email.trim().toLowerCase(),
-        ),
-      );
-
-      const missingEmails = normalizedTravelerEmails.filter(
-        //normalization means converting data into a standard, uniform format so it can be compared fairly.
-        (email) => !foundEmails.has(email),
-      );
-
-      if (missingEmails.length > 0) {
-        throw new BadRequestError({
-          description: `These traveler emails do not have profiles: ${missingEmails.join(
-            //If any email on the list does not have an existing profile,
-            // it instantly stops and throws a BadRequestError listing the missing emails.
-            ", ",
-          )}`,
+          description:
+            "one or multiple emails are not associated with a profile",
+          body: input.travelers,
         });
       }
 
       const trip = await prisma.trip.create({
         data: {
-          ...input,
-          travelers: normalizedTravelerEmails,
+          ...(input as any),
+          travelers: travelerProfileIds,
         },
       });
 
-      return trip;
+      return this.mapTripFromPrisma(trip);
     } catch (e) {
       console.error("TRIP ERROR:", e);
 
@@ -100,6 +69,7 @@ export class TripManager {
       });
     }
   }
+
   async getTrip(tripId: string) {
     try {
       if (!tripId || tripId === "undefined" || tripId === "null") {
@@ -163,7 +133,7 @@ export class TripManager {
 
       const updated = await prisma.trip.update({
         where: { tripId },
-        data: input,
+        data: input as any,
       });
 
       return updated;
@@ -176,6 +146,21 @@ export class TripManager {
         description: "Failed to update trip",
       });
     }
+  }
+
+  mapTripFromPrisma(trip: any): TripResponse {
+    return new TripResponse({
+      ...trip,
+      destination: Array.isArray(trip.destination)
+        ? trip.destination.map(
+            (item: any) => new Destination(item as Partial<Destination>),
+          )
+        : [],
+      budget: trip.budget ? new Budget(trip.budget as Partial<Budget>) : null,
+      notes: Array.isArray(trip.notes)
+        ? trip.notes.map((note: any) => String(note))
+        : [],
+    });
   }
 
   async deleteTrip(tripId: string) {

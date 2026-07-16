@@ -70,7 +70,7 @@ export class TripManager {
     }
   }
 
-  async getTrip(tripId: string) {
+  async getTrip(tripId: string): Promise<TripResponse> {
     try {
       if (!tripId || tripId === "undefined" || tripId === "null") {
         throw new BadRequestError({
@@ -88,7 +88,7 @@ export class TripManager {
         });
       }
 
-      return trip;
+      return this.mapTripFromPrisma(trip);
     } catch (e) {
       console.error("TRIP ERROR:", e);
 
@@ -100,14 +100,17 @@ export class TripManager {
     }
   }
 
-  async getTripsByProfileId(profileId: string) {
+  async getTripsByProfileId(profileId: string): Promise<TripResponse[]> {
     try {
       const trips = await prisma.trip.findMany({
         where: { profileId },
         orderBy: { createdAt: "desc" },
       });
-
-      return trips;
+      let tripsResult: TripResponse[] = [];
+      trips.forEach((trip) => {
+        tripsResult.push(this.mapTripFromPrisma(trip));
+      });
+      return tripsResult;
     } catch (e) {
       console.error("TRIP ERROR:", e);
 
@@ -119,7 +122,10 @@ export class TripManager {
     }
   }
 
-  async updateTrip(tripId: string, input: UpdateTripRequest) {
+  async updateTrip(
+    tripId: string,
+    input: UpdateTripRequest,
+  ): Promise<TripResponse> {
     try {
       const trip = await prisma.trip.findUnique({
         where: { tripId },
@@ -136,7 +142,7 @@ export class TripManager {
         data: input as any,
       });
 
-      return updated;
+      return this.mapTripFromPrisma(updated);
     } catch (e) {
       console.error("TRIP ERROR:", e);
 

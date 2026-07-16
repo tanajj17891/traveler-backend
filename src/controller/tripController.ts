@@ -53,11 +53,11 @@ export class TripController {
     }
   }
 
-  @Put("/:tripId")
+  @Put("/:tripid")
   async updateTrip(
     @Param("tripid") tripId: string,
     @Body() body: UpdateTripRequest,
-  ) {
+  ): Promise<TripResponse> {
     const request = new UpdateTripBody(body);
 
     try {
@@ -82,7 +82,9 @@ export class TripController {
   }
 
   @Delete("/:tripid")
-  async deleteTrip(@Param("tripid") tripid: string) {
+  async deleteTrip(
+    @Param("tripid") tripid: string,
+  ): Promise<{ message: string }> {
     try {
       isUUID(tripid);
       return await tripManager.deleteTrip(tripid);
@@ -95,7 +97,9 @@ export class TripController {
     }
   }
   @Get("/by-profile/:profileid") //gets all trips by propfile id
-  async getTripsByProfileId(@Param("profileid") profileid: string) {
+  async getTripsByProfileId(
+    @Param("profileid") profileid: string,
+  ): Promise<TripResponse[]> {
     try {
       isUUID(profileid);
       return await tripManager.getTripsByProfileId(profileid);
@@ -109,7 +113,7 @@ export class TripController {
   }
 
   @Get("/:tripid")
-  async getTrip(@Param("tripid") tripId: string) {
+  async getTrip(@Param("tripid") tripId: string): Promise<TripResponse> {
     try {
       isUUID(tripId);
       return await tripManager.getTrip(tripId);

@@ -16,11 +16,15 @@ export class Destination {
   name: string;
   latitude: number;
   longitude: number;
+  arrivalDate: string;
+  leaveDate: string;
 
   constructor(data: Partial<Destination>) {
     this.name = data.name ? data.name : "";
     this.latitude = data.latitude ? data.latitude : 0;
     this.longitude = data.longitude ? data.longitude : 0;
+    this.arrivalDate = data.arrivalDate ? data.arrivalDate : "";
+    this.leaveDate = data.leaveDate ? data.leaveDate : "";
   }
 }
 

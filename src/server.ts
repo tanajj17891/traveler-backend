@@ -8,6 +8,7 @@ import { ErrorMiddleware } from "./middleware/errorMiddleware";
 import { ProfileController } from "./controller/profileController";
 import { AuthMiddleware } from "./middleware/authMiddleware";
 import { TripController } from "./controller/tripController";
+import { LocationController } from "./controller/locationController";
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ const app = createExpressServer({
     HealthController,
     ProfileController,
     TripController,
+    LocationController,
   ],
   middlewares: [ErrorMiddleware],
   defaultErrorHandler: false,

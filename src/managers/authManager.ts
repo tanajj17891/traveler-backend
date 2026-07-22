@@ -134,9 +134,6 @@ export class AuthManager {
         message: "Login successful",
       };
     } catch (err: any) {
-      console.log("COGNITO LOGIN ERROR NAME:", err.name);
-      console.log("COGNITO LOGIN ERROR MESSAGE:", err.message);
-      console.log("FULL COGNITO ERROR:", err);
       if (err.name === "NotAuthorizedException") {
         throw new BadRequestError({
           description: "Incorrect email or password",

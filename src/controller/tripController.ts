@@ -96,7 +96,7 @@ export class TripController {
       });
     }
   }
-  @Get("/by-profile/:profileid") //gets all trips by propfile id
+  @Get("/by-profile/:profileId") //gets all trips by propfile id
   async getTripsByProfileId(
     @Param("profileid") profileid: string,
   ): Promise<TripResponse[]> {

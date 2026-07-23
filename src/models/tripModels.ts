@@ -32,7 +32,7 @@ export class Budget {
   currency: string;
   total: number;
   flights: number;
-  accomodation: number;
+  accomodation: string;
   food: number;
   activities: number;
   misc: number;
@@ -41,7 +41,7 @@ export class Budget {
     this.currency = data.currency ? data.currency : "";
     this.total = data.total ? data.total : 0;
     this.flights = data.flights ? data.flights : 0;
-    this.accomodation = data.accomodation ? data.accomodation : 0;
+    this.accomodation = data.accomodation ? data.accomodation : "";
     this.food = data.food ? data.food : 0;
     this.activities = data.activities ? data.activities : 0;
     this.misc = data.misc ? data.misc : 0;

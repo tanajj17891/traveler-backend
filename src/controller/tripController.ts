@@ -83,11 +83,11 @@ export class TripController {
 
   @Delete("/:tripid")
   async deleteTrip(
-    @Param("tripid") tripid: string,
+    @Param("tripid") tripId: string,
   ): Promise<{ message: string }> {
     try {
-      isUUID(tripid);
-      return await tripManager.deleteTrip(tripid);
+      isUUID(tripId);
+      return await tripManager.deleteTrip(tripId);
     } catch (e) {
       if (e instanceof ExtendedError) throw e;
 
@@ -96,13 +96,13 @@ export class TripController {
       });
     }
   }
-  @Get("/by-profile/:profileId") //gets all trips by propfile id
+  @Get("/by-profile/:profileid") //gets all trips by propfile id
   async getTripsByProfileId(
-    @Param("profileid") profileid: string,
+    @Param("profileid") profileId: string,
   ): Promise<TripResponse[]> {
     try {
-      isUUID(profileid);
-      return await tripManager.getTripsByProfileId(profileid);
+      isUUID(profileId);
+      return await tripManager.getTripsByProfileId(profileId);
     } catch (e) {
       if (e instanceof ExtendedError) throw e;
 

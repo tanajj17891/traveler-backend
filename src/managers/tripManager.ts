@@ -8,7 +8,6 @@ import {
 import {
   Budget,
   CreateTripPost,
-  CreateTripRequest,
   Destination,
   TripResponse,
   UpdateTripRequest,
@@ -157,6 +156,7 @@ export class TripManager {
   mapTripFromPrisma(trip: any): TripResponse {
     return new TripResponse({
       ...trip,
+
       destination: Array.isArray(trip.destination)
         ? trip.destination.map(
             (item: any) => new Destination(item as Partial<Destination>),

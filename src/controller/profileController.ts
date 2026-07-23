@@ -22,6 +22,7 @@ import {
   BadRequestError,
   ExtendedError,
   InternalServerError,
+  NotFoundError,
 } from "../Errors/Errors";
 import { isUUID, validateOrReject } from "class-validator";
 import { AuthMiddleware } from "../middleware/authMiddleware";
@@ -93,6 +94,26 @@ export class ProfileController {
     } catch (e) {
       if (e instanceof ExtendedError) throw e;
       throw new InternalServerError({ description: "Something went wrong" });
+    }
+  }
+  @Get("/:profileid")
+  async getProfileById(
+    @Param("profileid") profileId: string,
+  ): Promise<ProfileResponse> {
+    try {
+      if (!isUUID(profileId)) {
+        throw new BadRequestError({
+          description: "Invalid profile ID",
+        });
+      }
+
+      return await profileManager.getProfileById(profileId);
+    } catch (e) {
+      if (e instanceof ExtendedError) throw e;
+
+      throw new InternalServerError({
+        description: "Something went wrong",
+      });
     }
   }
 }

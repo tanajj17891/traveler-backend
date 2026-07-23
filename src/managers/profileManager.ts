@@ -8,6 +8,7 @@ import {
 import {
   CreateProfileRequest,
   UpdateProfileRequest,
+  type ProfileResponse,
 } from "../models/profileModels";
 
 const prisma = new PrismaClient();
@@ -100,6 +101,32 @@ export class ProfileManager {
       if (e instanceof ExtendedError) throw e;
       throw new InternalServerError({
         description: "Failed to delete profile",
+      });
+    }
+  }
+  async getProfileById(profileId: string): Promise<ProfileResponse> {
+    try {
+      console.log("Searching for profile ID:", profileId);
+      const profile = await prisma.profile.findUnique({
+        where: {
+          profileId,
+        },
+      });
+
+      if (!profile) {
+        throw new NotFoundError({
+          description: `Profile not found for ID: ${profileId}`,
+        });
+      }
+
+      return profile;
+    } catch (e) {
+      if (e instanceof ExtendedError) {
+        throw e;
+      }
+
+      throw new InternalServerError({
+        description: "Failed to get profile",
       });
     }
   }

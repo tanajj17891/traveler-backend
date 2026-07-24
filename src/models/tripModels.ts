@@ -59,6 +59,7 @@ export type CreateTripRequest = {
 };
 
 export class TripResponse {
+  tripId: string;
   profileId: string;
   tripName: string;
   destination?: Destination[] | null;
@@ -73,6 +74,7 @@ export class TripResponse {
       destinations.push(new Destination(destination));
     });
     this.destination = destinations;
+    this.tripId = data.tripId ?? "";
     this.budget = data.budget;
     this.profileId = data.profileId ? data.profileId : "";
     this.tripName = data.tripName ? data.tripName : "";

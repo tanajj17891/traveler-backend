@@ -106,7 +106,6 @@ export class ProfileManager {
   }
   async getProfileById(profileId: string): Promise<ProfileResponse> {
     try {
-      console.log("Searching for profile ID:", profileId);
       const profile = await prisma.profile.findUnique({
         where: {
           profileId,

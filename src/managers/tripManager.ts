@@ -156,7 +156,7 @@ export class TripManager {
   mapTripFromPrisma(trip: any): TripResponse {
     return new TripResponse({
       ...trip,
-
+      tripId: trip.tripId,
       destination: Array.isArray(trip.destination)
         ? trip.destination.map(
             (item: any) => new Destination(item as Partial<Destination>),

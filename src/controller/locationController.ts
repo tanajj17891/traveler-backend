@@ -9,6 +9,11 @@ import {
   Get,
   QueryParam,
 } from "routing-controllers";
+import {
+  BadRequestError,
+  ExtendedError,
+  InternalServerError,
+} from "../Errors/Errors";
 import { AuthMiddleware } from "../middleware/authMiddleware";
 import { LocationManager } from "../managers/locationManager";
 
@@ -22,7 +27,11 @@ export class LocationController {
     try {
       return await locationManager.getAutoCompleteLocations(place);
     } catch (e: any) {
-      console.log(e.statusDetails);
+      if (e instanceof ExtendedError) throw e;
+
+      throw new InternalServerError({
+        description: "Something went wrong",
+      });
     }
   }
 
@@ -31,7 +40,11 @@ export class LocationController {
     try {
       return await locationManager.getPlace(placeId);
     } catch (e) {
-      console.log(JSON.stringify(e));
+      if (e instanceof ExtendedError) throw e;
+
+      throw new InternalServerError({
+        description: "Something went wrong",
+      });
     }
   }
 }

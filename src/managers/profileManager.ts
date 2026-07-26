@@ -8,6 +8,7 @@ import {
 import {
   CreateProfileRequest,
   UpdateProfileRequest,
+  type ProfileResponse,
 } from "../models/profileModels";
 
 const prisma = new PrismaClient();
@@ -39,11 +40,12 @@ export class ProfileManager {
     }
   }
 
-  async getProfile(cognitoSub: string) {
+  async getProfile(email: string) {
     try {
       const profile = await prisma.profile.findUnique({
-        where: { cognitoSub },
+        where: { email },
       });
+
       if (!profile) {
         throw new NotFoundError({ description: "Profile not found" });
       }
@@ -52,22 +54,23 @@ export class ProfileManager {
       {
         if (e instanceof ExtendedError) throw e;
         throw new InternalServerError({
-          description: "Failed to create profile",
+          description: "Failed to get profile",
         });
       }
     }
   }
 
-  async updateProfile(cognitoSub: string, input: UpdateProfileRequest) {
+  async updateProfile(profileId: string, input: UpdateProfileRequest) {
     try {
       const profile = await prisma.profile.findUnique({
-        where: { cognitoSub },
+        where: { profileId },
       });
+
       if (!profile) {
         throw new NotFoundError({ description: "Profile not found" });
       }
       const updated = await prisma.profile.update({
-        where: { cognitoSub },
+        where: { profileId },
         data: input,
       });
 
@@ -79,10 +82,10 @@ export class ProfileManager {
       });
     }
   }
-  async deleteProfile(cognitoSub: string) {
+  async deleteProfile(profileId: string) {
     try {
       const profile = await prisma.profile.findUnique({
-        where: { cognitoSub },
+        where: { profileId: profileId },
       });
 
       if (!profile) {
@@ -90,7 +93,7 @@ export class ProfileManager {
       }
 
       await prisma.profile.delete({
-        where: { cognitoSub },
+        where: { profileId: profileId },
       });
 
       return { message: "Profile deleted successfully" };
@@ -98,6 +101,31 @@ export class ProfileManager {
       if (e instanceof ExtendedError) throw e;
       throw new InternalServerError({
         description: "Failed to delete profile",
+      });
+    }
+  }
+  async getProfileById(profileId: string): Promise<ProfileResponse> {
+    try {
+      const profile = await prisma.profile.findUnique({
+        where: {
+          profileId,
+        },
+      });
+
+      if (!profile) {
+        throw new NotFoundError({
+          description: `Profile not found for ID: ${profileId}`,
+        });
+      }
+
+      return profile;
+    } catch (e) {
+      if (e instanceof ExtendedError) {
+        throw e;
+      }
+
+      throw new InternalServerError({
+        description: "Failed to get profile",
       });
     }
   }

@@ -7,6 +7,8 @@ import serverless from "serverless-http";
 import { ErrorMiddleware } from "./middleware/errorMiddleware";
 import { ProfileController } from "./controller/profileController";
 import { AuthMiddleware } from "./middleware/authMiddleware";
+import { TripController } from "./controller/tripController";
+import { LocationController } from "./controller/locationController";
 
 dotenv.config();
 
@@ -20,7 +22,13 @@ const app = createExpressServer({
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   },
-  controllers: [AuthController, HealthController, ProfileController],
+  controllers: [
+    AuthController,
+    HealthController,
+    ProfileController,
+    TripController,
+    LocationController,
+  ],
   middlewares: [ErrorMiddleware],
   defaultErrorHandler: false,
 });

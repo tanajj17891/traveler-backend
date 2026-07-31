@@ -1,4 +1,5 @@
 service: traveler-backend
+useDotenv: true
 
 provider:
   name: aws
@@ -8,6 +9,7 @@ provider:
     COGNITO_APP_CLIENT_ID: ${env:COGNITO_APP_CLIENT_ID}
     COGNITO_REGION: ${env:AWS_REGION}
     DATABASE_URL: ${env:DATABASE_URL}
+    COGNITO_USER_POOL_ID: ${env:COGNITO_USER_POOL_ID}
     GOOGLE_PLACES_API_KEY: ${env:GOOGLE_PLACES_API_KEY}
 
 functions:
@@ -18,10 +20,5 @@ functions:
           path: /{proxy+}
           method: ANY
 
-build:
-  esbuild:
-    external:
-      - "@koa/cors"
-      - "koa"
-      - "koa-router"
-      - "koa-bodyparser"
+plugins:
+  - serverless-plugin-typescript

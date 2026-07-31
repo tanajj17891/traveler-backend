@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+   binaryTargets = ["native", "rhel-openssl-1.0.x"]
 }
 
 datasource db {
@@ -22,6 +23,7 @@ model Profile {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   trips       Trip[]
+  budgets     Budgets[]
 }
 
 enum TravelStyle {
@@ -55,9 +57,32 @@ model Trip {
   tripName   String
   destination Json[]
   travelers   String[]
-  budget      Json?
+  budgets     Budgets[]
   notes       Json[]
 
   status      String?
 }
+
+
+model Budgets {
+  budgetId      String   @id @default(uuid())
+  tripId        String
+  profileId     String
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  total         Float
+  flights       Float
+  accommodation Float
+  food          Float
+  activities    Float
+  misc          Float
+
+  trip          Trip     @relation(fields: [tripId], references: [tripId], onDelete: Cascade)
+  profile       Profile  @relation(fields: [profileId], references: [profileId], onDelete: Cascade)
+ @@unique([tripId, profileId])
+
+}
+
 

@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
-   binaryTargets = ["native", "rhel-openssl-1.0.x"]
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]
 }
 
 datasource db {
@@ -9,21 +9,22 @@ datasource db {
 }
 
 model Profile {
-  profileId          String    @id @default(uuid())
-  cognitoSub  String    @unique
+  profileId   String             @id @default(uuid())
+  cognitoSub  String             @unique
   firstName   String?
   lastName    String?
-  email       String    @unique
+  email       String             @unique
   gender      String?
   dateOfBirth String?
   state       String?
   city        String?
   travelStyle TravelStyle[]
   preferences TravelPreference[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
   trips       Trip[]
   budgets     Budgets[]
+  notes       Note[]
 }
 
 enum TravelStyle {
@@ -46,31 +47,30 @@ enum TravelPreference {
 }
 
 model Trip {
-  tripId     String   @id @default(uuid())
+  tripId String @id @default(uuid())
 
-  profileId  String 
-  profile     Profile  @relation(fields: [profileId], references: [profileId])
+  profileId String
+  profile   Profile @relation(fields: [profileId], references: [profileId])
 
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  tripName   String
+  tripName    String
   destination Json[]
   travelers   String[]
   budgets     Budgets[]
-  notes       Json[]
+  notes       Note[]
 
-  status      String?
+  status String?
 }
 
-
 model Budgets {
-  budgetId      String   @id @default(uuid())
-  tripId        String
-  profileId     String
+  budgetId  String @id @default(uuid())
+  tripId    String
+  profileId String
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   total         Float
   flights       Float
@@ -79,10 +79,25 @@ model Budgets {
   activities    Float
   misc          Float
 
-  trip          Trip     @relation(fields: [tripId], references: [tripId], onDelete: Cascade)
-  profile       Profile  @relation(fields: [profileId], references: [profileId], onDelete: Cascade)
- @@unique([tripId, profileId])
+  trip    Trip    @relation(fields: [tripId], references: [tripId], onDelete: Cascade)
+  profile Profile @relation(fields: [profileId], references: [profileId], onDelete: Cascade)
 
+  @@unique([tripId, profileId])
 }
 
+model Note {
+  noteId    String @id @default(uuid())
+  tripId    String
+  profileId String
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  text String
+
+  trip    Trip    @relation(fields: [tripId], references: [tripId], onDelete: Cascade)
+  profile Profile @relation(fields: [profileId], references: [profileId], onDelete: Cascade)
+
+  @@unique([tripId, profileId])
+  @@map("notes")
+}

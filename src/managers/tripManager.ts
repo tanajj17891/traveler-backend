@@ -161,10 +161,6 @@ export class TripManager {
             (item: any) => new Destination(item as Partial<Destination>),
           )
         : [],
-
-      notes: Array.isArray(trip.notes)
-        ? trip.notes.map((note: any) => String(note))
-        : [],
     });
   }
 

@@ -34,7 +34,6 @@ export type CreateTripRequest = {
   destination: Destination[];
   travelers: string[];
 
-  notes: string[];
   status?: TripStatus;
 };
 
@@ -45,7 +44,6 @@ export class TripResponse {
   destination?: Destination[] | null;
   travelers: string[];
 
-  notes: string[];
   status?: TripStatus;
 
   constructor(data: Partial<TripResponse>) {
@@ -59,7 +57,7 @@ export class TripResponse {
     this.profileId = data.profileId ? data.profileId : "";
     this.tripName = data.tripName ? data.tripName : "";
     this.travelers = data.travelers ? data.travelers : [];
-    this.notes = data.notes ? data.notes : [];
+
     this.status = data.status;
   }
 }
@@ -68,7 +66,7 @@ export type UpdateTripRequest = {
   tripName?: string;
   destination?: Destination[];
   travelers?: string[];
-  notes?: string[];
+
   status?: TripStatus;
 };
 
@@ -87,9 +85,6 @@ export class CreateTripPost {
   @IsOptional()
   travelers?: string[];
 
-  @IsArray()
-  notes: string[];
-
   @IsEnum(TripStatus)
   status: TripStatus;
 
@@ -98,7 +93,6 @@ export class CreateTripPost {
     this.tripName = data.tripName;
     this.destination = data.destination;
 
-    this.notes = data.notes;
     this.status = data.status ? data.status : TripStatus.PLANNING;
     this.travelers = data?.travelers
       ? [...new Set(data.travelers.map((email) => email.trim().toLowerCase()))]
@@ -119,10 +113,6 @@ export class UpdateTripBody {
   @IsOptional()
   travelers?: string[];
 
-  @IsArray()
-  @IsOptional()
-  notes?: string[];
-
   @IsEnum(TripStatus)
   @IsOptional()
   status?: TripStatus;
@@ -131,7 +121,7 @@ export class UpdateTripBody {
     this.tripName = data.tripName;
     this.destination = data.destination;
     this.travelers = data.travelers;
-    this.notes = data.notes;
+
     this.status = data.status;
   }
 }

@@ -10,6 +10,7 @@ import { AuthMiddleware } from "./middleware/authMiddleware";
 import { TripController } from "./controller/tripController";
 import { LocationController } from "./controller/locationController";
 import { BudgetController } from "./controller/budgetController";
+import { NotesController } from "./controller/notesController";
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ const app = createExpressServer({
     TripController,
     LocationController,
     BudgetController,
+    NotesController,
   ],
   middlewares: [ErrorMiddleware],
   defaultErrorHandler: false,

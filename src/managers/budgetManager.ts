@@ -16,23 +16,24 @@ const prisma = new PrismaClient();
 export class BudgetManager {
   async createBudget(input: CreateBudgetPost): Promise<BudgetResponse> {
     try {
-      const trip = await prisma.trip.findUnique({
-        where: {
-          tripId: input.tripId,
-        },
-      });
+      const [trip, profile] = await Promise.all([
+        prisma.trip.findUnique({
+          where: {
+            tripId: input.tripId,
+          },
+        }),
+        prisma.profile.findUnique({
+          where: {
+            profileId: input.profileId,
+          },
+        }),
+      ]);
 
       if (!trip) {
         throw new NotFoundError({
           description: "Trip not found",
         });
       }
-
-      const profile = await prisma.profile.findUnique({
-        where: {
-          profileId: input.profileId,
-        },
-      });
 
       if (!profile) {
         throw new NotFoundError({
@@ -98,8 +99,6 @@ export class BudgetManager {
 
       return new BudgetResponse(budget);
     } catch (e) {
-      console.error("BUDGET ERROR:", e);
-
       if (e instanceof ExtendedError) {
         throw e;
       }
@@ -117,14 +116,12 @@ export class BudgetManager {
           tripId,
         },
         orderBy: {
-          createdAt: "asc",
+          createdAt: "desc",
         },
       });
 
       return budgets.map((budgets) => new BudgetResponse(budgets));
     } catch (e) {
-      console.error("BUDGET ERROR:", e);
-
       if (e instanceof ExtendedError) {
         throw e;
       }
@@ -135,7 +132,7 @@ export class BudgetManager {
     }
   }
 
-  async getBudgetByTripAndProfile(
+  async getBudgetByTripIdAndProfileId(
     tripId: string,
     profileId: string,
   ): Promise<BudgetResponse> {
@@ -157,8 +154,6 @@ export class BudgetManager {
 
       return new BudgetResponse(budget);
     } catch (e) {
-      console.error("BUDGET ERROR:", e);
-
       if (e instanceof ExtendedError) {
         throw e;
       }
@@ -195,8 +190,6 @@ export class BudgetManager {
 
       return new BudgetResponse(updatedBudget);
     } catch (e) {
-      console.error("BUDGET ERROR:", e);
-
       if (e instanceof ExtendedError) {
         throw e;
       }
@@ -231,8 +224,6 @@ export class BudgetManager {
         message: "Budget deleted successfully",
       };
     } catch (e) {
-      console.error("BUDGET ERROR:", e);
-
       if (e instanceof ExtendedError) {
         throw e;
       }

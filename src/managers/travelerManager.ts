@@ -6,15 +6,15 @@ import {
   NotFoundError,
 } from "../Errors/Errors";
 import {
-  NotesResponse,
-  CreateNotesPost,
-  UpdateNotesRequest,
-} from "../models/notesModels";
+  TravelerResponse,
+  CreateTravelerPost,
+  UpdateTravelerRequest,
+} from "../models/travelerModels";
 
 const prisma = new PrismaClient();
 
-export class NotesManager {
-  async createNote(input: CreateNotesPost): Promise<NotesResponse> {
+export class TravelerManager {
+  async createTraveler(input: CreateTravelerPost): Promise<TravelerResponse> {
     try {
       const trip = await prisma.trip.findUnique({
         where: {
@@ -40,7 +40,7 @@ export class NotesManager {
         });
       }
 
-      const existingNote = await prisma.note.findUnique({
+      const existingTraveler = await prisma.travelers.findUnique({
         where: {
           tripId_profileId: {
             tripId: input.tripId,
@@ -49,87 +49,92 @@ export class NotesManager {
         },
       });
 
-      const note = await prisma.note.create({
-        data: {
-          tripId: input.tripId,
-          profileId: input.profileId,
-          text: input.text,
-        },
-      });
-
-      return new NotesResponse(note);
-    } catch (e) {
-      console.error("NOTE ERROR:", e);
-
-      if (e instanceof ExtendedError) {
-        throw e;
-      }
-
-      throw new InternalServerError({
-        description: "Failed to create note",
-      });
-    }
-  }
-
-  async getNote(noteId: string): Promise<NotesResponse> {
-    try {
-      const note = await prisma.note.findUnique({
-        where: {
-          noteId,
-        },
-      });
-
-      if (!note) {
-        throw new NotFoundError({
-          description: "Note not found",
+      if (existingTraveler) {
+        throw new BadRequestError({
+          description:
+            "A traveler already exists for this profile on this trip",
         });
       }
 
-      return new NotesResponse(note);
+      const travelers = await prisma.travelers.create({
+        data: {
+          tripId: input.tripId,
+          profileId: input.profileId,
+          email: input.email,
+        },
+      });
+
+      return new TravelerResponse(travelers);
     } catch (e) {
-      console.error("NOTE ERROR:", e);
+      console.error("TRAVELER CREATE ERROR:", e);
 
       if (e instanceof ExtendedError) {
         throw e;
       }
 
       throw new InternalServerError({
-        description: "Failed to get note",
+        description: "Failed to add travelers",
       });
     }
   }
 
-  async getNotesByTripId(tripId: string): Promise<NotesResponse[]> {
+  async getTraveler(travelerId: string): Promise<TravelerResponse> {
     try {
-      const notes = await prisma.note.findMany({
+      const travelers = await prisma.travelers.findUnique({
+        where: {
+          travelerId,
+        },
+      });
+
+      if (!travelers) {
+        throw new NotFoundError({
+          description: "travelers not found",
+        });
+      }
+
+      return new TravelerResponse(travelers);
+    } catch (e) {
+      if (e instanceof ExtendedError) {
+        throw e;
+      }
+
+      throw new InternalServerError({
+        description: "Failed to get travelers",
+      });
+    }
+  }
+
+  async getTravelersByTripId(tripId: string): Promise<TravelerResponse[]> {
+    try {
+      const travelers = await prisma.travelers.findMany({
         where: {
           tripId,
         },
         orderBy: {
-          createdAt: "asc",
+          createdAt: "desc",
         },
       });
 
-      return notes.map((note) => new NotesResponse(note));
+      return travelers.map((travelers) => new TravelerResponse(travelers));
     } catch (e) {
-      console.error("NOTE ERROR:", e);
+      console.error("travelers ERROR:", e);
 
       if (e instanceof ExtendedError) {
         throw e;
       }
 
       throw new InternalServerError({
-        description: "Failed to get trip notes",
+        description: "Failed to get trip travelers",
       });
     }
   }
 
-  async getNoteByTripAndProfile(
+  async getTravelerByTripIdAndProfileId(
     tripId: string,
     profileId: string,
-  ): Promise<NotesResponse> {
+  ): Promise<TravelerResponse> {
     try {
-      const note = await prisma.note.findUnique({
+      const travelers = await prisma.travelers.findUnique({
         where: {
           tripId_profileId: {
             tripId,
@@ -138,96 +143,92 @@ export class NotesManager {
         },
       });
 
-      if (!note) {
+      if (!travelers) {
         throw new NotFoundError({
-          description: "Note not found",
+          description: "travelers not found",
         });
       }
 
-      return new NotesResponse(note);
+      return new TravelerResponse(travelers);
     } catch (e) {
-      console.error("NOTE ERROR:", e);
-
       if (e instanceof ExtendedError) {
         throw e;
       }
 
       throw new InternalServerError({
-        description: "Failed to get note",
+        description: "Failed to get travelers",
       });
     }
   }
 
-  async updateNote(
-    noteId: string,
-    input: UpdateNotesRequest,
-  ): Promise<NotesResponse> {
+  async updateTravelers(
+    travelerId: string,
+    input: UpdateTravelerRequest,
+  ): Promise<TravelerResponse> {
     try {
-      const existingNote = await prisma.note.findUnique({
+      const existingTraveler = await prisma.travelers.findUnique({
         where: {
-          noteId,
+          travelerId,
         },
       });
 
-      if (!existingNote) {
+      if (!existingTraveler) {
         throw new NotFoundError({
-          description: "Note not found",
+          description: "travelers not found",
         });
       }
 
-      const updatedNote = await prisma.note.update({
+      const updatedTraveler = await prisma.travelers.update({
         where: {
-          noteId,
+          travelerId,
         },
         data: input,
       });
 
-      return new NotesResponse(updatedNote);
+      return new TravelerResponse(updatedTraveler);
     } catch (e) {
-      console.error("NOTE ERROR:", e);
-
       if (e instanceof ExtendedError) {
         throw e;
       }
 
       throw new InternalServerError({
-        description: "Failed to update note",
+        description: "Failed to update travelers",
       });
     }
   }
 
-  async deleteNote(noteId: string): Promise<{ message: string }> {
+  async deleteTraveler(travelerId: string): Promise<{ message: string }> {
     try {
-      const existingNote = await prisma.note.findUnique({
+      const existingTraveler = await prisma.travelers.findUnique({
         where: {
-          noteId,
+          travelerId,
         },
       });
 
-      if (!existingNote) {
+      if (!existingTraveler) {
         throw new NotFoundError({
-          description: "Note not found",
+          description: "travelers not found",
         });
       }
 
-      await prisma.note.delete({
+      await prisma.travelers.delete({
         where: {
-          noteId,
+          travelerId,
         },
       });
 
       return {
-        message: "Note deleted successfully",
+        message: "travelers deleted successfully",
       };
     } catch (e) {
-      console.error("NOTE ERROR:", e);
+      console.error("travelers ERROR:", e);
 
       if (e instanceof ExtendedError) {
         throw e;
       }
 
       throw new InternalServerError({
-        description: "Failed to delete note",
+        description: "Failed to delete travelers",
       });
     }
   }

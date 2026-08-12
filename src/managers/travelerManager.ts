@@ -16,23 +16,25 @@ const prisma = new PrismaClient();
 export class TravelerManager {
   async createTraveler(input: CreateTravelerPost): Promise<TravelerResponse> {
     try {
-      const trip = await prisma.trip.findUnique({
-        where: {
-          tripId: input.tripId,
-        },
-      });
+      const [trip, profile] = await Promise.all([
+        prisma.trip.findUnique({
+          where: {
+            tripId: input.tripId,
+          },
+        }),
+
+        prisma.profile.findUnique({
+          where: {
+            profileId: input.profileId,
+          },
+        }),
+      ]);
 
       if (!trip) {
         throw new NotFoundError({
           description: "Trip not found",
         });
       }
-
-      const profile = await prisma.profile.findUnique({
-        where: {
-          profileId: input.profileId,
-        },
-      });
 
       if (!profile) {
         throw new NotFoundError({
@@ -117,8 +119,6 @@ export class TravelerManager {
 
       return travelers.map((travelers) => new TravelerResponse(travelers));
     } catch (e) {
-      console.error("travelers ERROR:", e);
-
       if (e instanceof ExtendedError) {
         throw e;
       }
@@ -221,8 +221,6 @@ export class TravelerManager {
         message: "travelers deleted successfully",
       };
     } catch (e) {
-      console.error("travelers ERROR:", e);
-
       if (e instanceof ExtendedError) {
         throw e;
       }

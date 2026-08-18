@@ -71,8 +71,6 @@ export class BudgetManager {
 
       return new BudgetResponse(budget);
     } catch (e) {
-      console.error("BUDGET ERROR:", e);
-
       if (e instanceof ExtendedError) {
         throw e;
       }

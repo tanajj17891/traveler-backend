@@ -16,23 +16,25 @@ const prisma = new PrismaClient();
 export class NotesManager {
   async createNote(input: CreateNotesPost): Promise<NotesResponse> {
     try {
-      const trip = await prisma.trip.findUnique({
-        where: {
-          tripId: input.tripId,
-        },
-      });
+      const [trip, profile] = await Promise.all([
+        prisma.trip.findUnique({
+          where: {
+            tripId: input.tripId,
+          },
+        }),
+
+        prisma.profile.findUnique({
+          where: {
+            profileId: input.profileId,
+          },
+        }),
+      ]);
 
       if (!trip) {
         throw new NotFoundError({
           description: "Trip not found",
         });
       }
-
-      const profile = await prisma.profile.findUnique({
-        where: {
-          profileId: input.profileId,
-        },
-      });
 
       if (!profile) {
         throw new NotFoundError({
@@ -49,12 +51,6 @@ export class NotesManager {
         },
       });
 
-      if (existingNote) {
-        throw new BadRequestError({
-          description: "A note already exists for this profile on this trip",
-        });
-      }
-
       const note = await prisma.note.create({
         data: {
           tripId: input.tripId,
@@ -65,8 +61,6 @@ export class NotesManager {
 
       return new NotesResponse(note);
     } catch (e) {
-      console.error("NOTE ERROR:", e);
-
       if (e instanceof ExtendedError) {
         throw e;
       }
@@ -93,8 +87,6 @@ export class NotesManager {
 
       return new NotesResponse(note);
     } catch (e) {
-      console.error("NOTE ERROR:", e);
-
       if (e instanceof ExtendedError) {
         throw e;
       }
@@ -112,7 +104,7 @@ export class NotesManager {
           tripId,
         },
         orderBy: {
-          createdAt: "asc",
+          createdAt: "desc",
         },
       });
 
@@ -130,7 +122,7 @@ export class NotesManager {
     }
   }
 
-  async getNoteByTripAndProfile(
+  async getNotesByTripAndProfileId(
     tripId: string,
     profileId: string,
   ): Promise<NotesResponse> {
@@ -152,8 +144,6 @@ export class NotesManager {
 
       return new NotesResponse(note);
     } catch (e) {
-      console.error("NOTE ERROR:", e);
-
       if (e instanceof ExtendedError) {
         throw e;
       }
@@ -190,8 +180,6 @@ export class NotesManager {
 
       return new NotesResponse(updatedNote);
     } catch (e) {
-      console.error("NOTE ERROR:", e);
-
       if (e instanceof ExtendedError) {
         throw e;
       }

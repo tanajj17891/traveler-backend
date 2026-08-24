@@ -32,7 +32,6 @@ export type CreateTripRequest = {
   profileId: string;
   tripName: string;
   destination: Destination[];
-  travelers: string[];
 
   status?: TripStatus;
 };
@@ -42,7 +41,6 @@ export class TripResponse {
   profileId: string;
   tripName: string;
   destination?: Destination[] | null;
-  travelers: string[];
 
   status?: TripStatus;
 
@@ -56,7 +54,6 @@ export class TripResponse {
 
     this.profileId = data.profileId ? data.profileId : "";
     this.tripName = data.tripName ? data.tripName : "";
-    this.travelers = data.travelers ? data.travelers : [];
 
     this.status = data.status;
   }
@@ -65,7 +62,6 @@ export class TripResponse {
 export type UpdateTripRequest = {
   tripName?: string;
   destination?: Destination[];
-  travelers?: string[];
 
   status?: TripStatus;
 };
@@ -81,10 +77,6 @@ export class CreateTripPost {
   @IsArray()
   destination: Destination[];
 
-  @IsArray()
-  @IsOptional()
-  travelers?: string[];
-
   @IsEnum(TripStatus)
   status: TripStatus;
 
@@ -94,9 +86,6 @@ export class CreateTripPost {
     this.destination = data.destination;
 
     this.status = data.status ? data.status : TripStatus.PLANNING;
-    this.travelers = data?.travelers
-      ? [...new Set(data.travelers.map((email) => email.trim().toLowerCase()))]
-      : undefined;
   }
 }
 
@@ -109,10 +98,6 @@ export class UpdateTripBody {
   @IsOptional()
   destination?: Destination[];
 
-  @IsArray()
-  @IsOptional()
-  travelers?: string[];
-
   @IsEnum(TripStatus)
   @IsOptional()
   status?: TripStatus;
@@ -120,7 +105,6 @@ export class UpdateTripBody {
   constructor(data: UpdateTripRequest) {
     this.tripName = data.tripName;
     this.destination = data.destination;
-    this.travelers = data.travelers;
 
     this.status = data.status;
   }

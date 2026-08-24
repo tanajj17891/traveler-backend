@@ -25,6 +25,7 @@ model Profile {
   trips       Trip[]
   budgets     Budgets[]
   notes       Note[]
+  travelers   Travelers[]
 }
 
 enum TravelStyle {
@@ -57,7 +58,7 @@ model Trip {
 
   tripName    String
   destination Json[]
-  travelers   String[]
+  travelers   Travelers[]
   budgets     Budgets[]
   notes       Note[]
 
@@ -100,4 +101,21 @@ model Note {
 
   @@unique([tripId, profileId])
   @@map("notes")
+}
+
+model Travelers {
+  travelerId String @id @default(uuid())
+  tripId     String
+  profileId  String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  email String
+
+  trip    Trip    @relation(fields: [tripId], references: [tripId], onDelete: Cascade)
+  profile Profile @relation(fields: [profileId], references: [profileId], onDelete: Cascade)
+
+  @@unique([tripId, profileId])
+  @@map("Travelers")
 }

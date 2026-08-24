@@ -22,7 +22,6 @@ import {
   BadRequestError,
   ExtendedError,
   InternalServerError,
-  NotFoundError,
 } from "../Errors/Errors";
 import { isUUID, validateOrReject } from "class-validator";
 import { AuthMiddleware } from "../middleware/authMiddleware";

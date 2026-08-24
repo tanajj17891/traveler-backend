@@ -6,7 +6,6 @@ import {
   BadRequestError,
 } from "../Errors/Errors";
 import {
-  Budget,
   CreateTripPost,
   Destination,
   TripResponse,
@@ -161,10 +160,6 @@ export class TripManager {
         ? trip.destination.map(
             (item: any) => new Destination(item as Partial<Destination>),
           )
-        : [],
-      budget: trip.budget ? new Budget(trip.budget as Partial<Budget>) : null,
-      notes: Array.isArray(trip.notes)
-        ? trip.notes.map((note: any) => String(note))
         : [],
     });
   }

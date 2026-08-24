@@ -9,6 +9,8 @@ import { ProfileController } from "./controller/profileController";
 import { AuthMiddleware } from "./middleware/authMiddleware";
 import { TripController } from "./controller/tripController";
 import { LocationController } from "./controller/locationController";
+import { BudgetController } from "./controller/budgetController";
+import { NotesController } from "./controller/notesController";
 
 dotenv.config();
 
@@ -17,9 +19,10 @@ const app = createExpressServer({
     origin: [
       "http://localhost:5173",
       "https://littletraveler.net",
-      "wwww.littletraveler.net",
+      "https://www.littletraveler.net",
+      "http://localhost:3000",
     ],
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   },
   controllers: [
@@ -28,6 +31,8 @@ const app = createExpressServer({
     ProfileController,
     TripController,
     LocationController,
+    BudgetController,
+    NotesController,
   ],
   middlewares: [ErrorMiddleware],
   defaultErrorHandler: false,

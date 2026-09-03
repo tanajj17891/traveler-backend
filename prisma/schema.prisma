@@ -57,7 +57,7 @@ model Trip {
   updatedAt DateTime @updatedAt
 
   tripName    String
-  destination Json[]
+  destination Destination[]
   travelers   Travelers[]
   budgets     Budgets[]
   notes       Note[]
@@ -118,4 +118,22 @@ model Travelers {
 
   @@unique([tripId, profileId])
   @@map("Travelers")
+}
+
+model Destination {
+  destinationId String @id @default(uuid())
+  tripId        String
+
+  name        String
+  latitude    Float
+  longitude   Float
+  arrivalDate String
+  leaveDate   String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  trip Trip @relation(fields: [tripId], references: [tripId], onDelete: Cascade)
+
+  @@map("destinations")
 }

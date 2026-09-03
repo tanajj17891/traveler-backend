@@ -17,8 +17,6 @@ const prisma = new PrismaClient();
 export class TripManager {
   async createTrip(input: CreateTripPost): Promise<TripResponse> {
     try {
-      let travelerProfileIds: string[] = [];
-
       const trip = await prisma.trip.create({
         data: {
           ...(input as any),

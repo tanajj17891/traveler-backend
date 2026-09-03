@@ -51,6 +51,7 @@ export class ProfileManager {
       }
       return profile;
     } catch (e) {
+      console.error("PROFILE GET ERROR:", e);
       {
         if (e instanceof ExtendedError) throw e;
         throw new InternalServerError({

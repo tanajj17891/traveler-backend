@@ -17,40 +17,9 @@ const prisma = new PrismaClient();
 export class TripManager {
   async createTrip(input: CreateTripPost): Promise<TripResponse> {
     try {
-      let travelerProfileIds: string[] = [];
-
-      if (input.travelers && input.travelers.length > 0) {
-        const travelerEmailAndProfileId = await prisma.profile.findMany({
-          where: {
-            OR: input.travelers.map((email) => ({
-              email: {
-                equals: email,
-                mode: "insensitive",
-              },
-            })),
-          },
-          select: {
-            profileId: true,
-            email: true,
-          },
-        });
-        travelerEmailAndProfileId.forEach((emailAndProfileId) => {
-          travelerProfileIds.push(emailAndProfileId.profileId);
-        });
-      }
-
-      if (travelerProfileIds.length !== input?.travelers?.length) {
-        throw new BadRequestError({
-          description:
-            "one or multiple emails are not associated with a profile",
-          body: input.travelers,
-        });
-      }
-
       const trip = await prisma.trip.create({
         data: {
           ...(input as any),
-          travelers: travelerProfileIds,
         },
       });
 

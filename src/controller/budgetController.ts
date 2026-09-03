@@ -115,7 +115,10 @@ export class BudgetController {
     }
 
     try {
-      return await budgetManager.getBudgetByTripAndProfile(tripId, profileId);
+      return await budgetManager.getBudgetByTripIdAndProfileId(
+        tripId,
+        profileId,
+      );
     } catch (e) {
       if (e instanceof ExtendedError) {
         throw e;

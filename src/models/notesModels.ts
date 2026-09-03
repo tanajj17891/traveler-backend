@@ -1,4 +1,11 @@
-import { IsNumber, IsOptional, IsUUID, Min } from "class-validator";
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Min,
+} from "class-validator";
 
 export type CreateNotesRequest = {
   profileId: string;
@@ -19,6 +26,8 @@ export class CreateNotesPost {
   @IsUUID()
   profileId: string;
 
+  @IsString()
+  @IsNotEmpty()
   text: string;
 
   constructor(data: CreateNotesRequest) {
@@ -29,10 +38,13 @@ export class CreateNotesPost {
 }
 
 export class UpdateNotesBody {
-  text: string;
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  text?: string;
 
   constructor(data: UpdateNotesRequest) {
-    this.text = data.text ?? "";
+    this.text = data.text;
   }
 }
 

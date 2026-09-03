@@ -9,14 +9,14 @@ import {
   UseBefore,
 } from "routing-controllers";
 import { isUUID, validateOrReject } from "class-validator";
-import { NotesManager } from "../managers/notesManager";
+import { DestinationManager } from "../managers/destinationsManager";
 import {
-  CreateNotesPost,
-  CreateNotesRequest,
-  NotesResponse,
-  UpdateNotesBody,
-  UpdateNotesRequest,
-} from "../models/notesModels";
+  CreateDestinationPost,
+  CreateDestinationRequest,
+  DestinationResponse,
+  UpdateDestinationBody,
+  UpdateDestinationRequest,
+} from "../models/destinationsModels";
 import {
   BadRequestError,
   ExtendedError,
@@ -24,14 +24,16 @@ import {
 } from "../Errors/Errors";
 import { AuthMiddleware } from "../middleware/authMiddleware";
 
-const notesManager = new NotesManager();
+const destinationManager = new DestinationManager();
 
-@JsonController("/notes")
+@JsonController("/destinations")
 @UseBefore(AuthMiddleware)
-export class NotesController {
+export class DestinationController {
   @Post()
-  async createNote(@Body() body: CreateNotesRequest): Promise<NotesResponse> {
-    const request = new CreateNotesPost(body);
+  async createDestination(
+    @Body() body: CreateDestinationRequest,
+  ): Promise<DestinationResponse> {
+    const request = new CreateDestinationPost(body);
 
     try {
       await validateOrReject(request);
@@ -43,28 +45,7 @@ export class NotesController {
     }
 
     try {
-      return await notesManager.createNote(request);
-    } catch (e) {
-      if (e instanceof ExtendedError) {
-        throw e;
-      }
-
-      throw new InternalServerError({
-        description: "Something went wrong",
-      });
-    }
-  }
-
-  @Get("/:noteid")
-  async getNote(@Param("noteid") noteId: string): Promise<NotesResponse> {
-    if (!isUUID(noteId)) {
-      throw new BadRequestError({
-        description: "Invalid note ID",
-      });
-    }
-
-    try {
-      return await notesManager.getNote(noteId);
+      return await destinationManager.createDestination(request);
     } catch (e) {
       if (e instanceof ExtendedError) {
         throw e;
@@ -77,9 +58,9 @@ export class NotesController {
   }
 
   @Get("/by-trip/:tripid")
-  async getNotesByTripId(
+  async getDestinationsByTripId(
     @Param("tripid") tripId: string,
-  ): Promise<NotesResponse[]> {
+  ): Promise<DestinationResponse[]> {
     if (!isUUID(tripId)) {
       throw new BadRequestError({
         description: "Invalid trip ID",
@@ -87,7 +68,7 @@ export class NotesController {
     }
 
     try {
-      return await notesManager.getNotesByTripId(tripId);
+      return await destinationManager.getDestinationsByTripId(tripId);
     } catch (e) {
       if (e instanceof ExtendedError) {
         throw e;
@@ -99,19 +80,19 @@ export class NotesController {
     }
   }
 
-  @Get("/by-trip/:tripid/profile/:profileid")
-  async getNoteByTripAndProfile(
-    @Param("tripid") tripId: string,
-    @Param("profileid") profileId: string,
-  ): Promise<NotesResponse> {
-    if (!isUUID(tripId) || !isUUID(profileId)) {
+  @Get("/:destinationid")
+  async getDestination(
+    @Param("destinationid")
+    destinationId: string,
+  ): Promise<DestinationResponse> {
+    if (!isUUID(destinationId)) {
       throw new BadRequestError({
-        description: "Invalid trip ID or profile ID",
+        description: "Invalid destination ID",
       });
     }
 
     try {
-      return await notesManager.getNotesByTripAndProfileId(tripId, profileId);
+      return await destinationManager.getDestination(destinationId);
     } catch (e) {
       if (e instanceof ExtendedError) {
         throw e;
@@ -123,18 +104,19 @@ export class NotesController {
     }
   }
 
-  @Put("/:noteid")
-  async updateNote(
-    @Param("noteid") noteId: string,
-    @Body() body: UpdateNotesRequest,
-  ): Promise<NotesResponse> {
-    if (!isUUID(noteId)) {
+  @Put("/:destinationid")
+  async updateDestination(
+    @Param("destinationid")
+    destinationId: string,
+    @Body() body: UpdateDestinationRequest,
+  ): Promise<DestinationResponse> {
+    if (!isUUID(destinationId)) {
       throw new BadRequestError({
-        description: "Invalid note ID",
+        description: "Invalid destination ID",
       });
     }
 
-    const request = new UpdateNotesBody(body);
+    const request = new UpdateDestinationBody(body);
 
     try {
       await validateOrReject(request);
@@ -146,7 +128,7 @@ export class NotesController {
     }
 
     try {
-      return await notesManager.updateNote(noteId, request);
+      return await destinationManager.updateDestination(destinationId, request);
     } catch (e) {
       if (e instanceof ExtendedError) {
         throw e;
@@ -158,18 +140,19 @@ export class NotesController {
     }
   }
 
-  @Delete("/:noteid")
-  async deleteNote(
-    @Param("noteid") noteId: string,
+  @Delete("/:destinationid")
+  async deleteDestination(
+    @Param("destinationid")
+    destinationId: string,
   ): Promise<{ message: string }> {
-    if (!isUUID(noteId)) {
+    if (!isUUID(destinationId)) {
       throw new BadRequestError({
-        description: "Invalid note ID",
+        description: "Invalid destination ID",
       });
     }
 
     try {
-      return await notesManager.deleteNote(noteId);
+      return await destinationManager.deleteDestination(destinationId);
     } catch (e) {
       if (e instanceof ExtendedError) {
         throw e;

@@ -7,7 +7,6 @@ import {
 } from "../Errors/Errors";
 import {
   CreateTripPost,
-  Destination,
   TripResponse,
   UpdateTripRequest,
 } from "../models/tripModels";
@@ -125,11 +124,6 @@ export class TripManager {
     return new TripResponse({
       ...trip,
       tripId: trip.tripId,
-      destination: Array.isArray(trip.destination)
-        ? trip.destination.map(
-            (item: any) => new Destination(item as Partial<Destination>),
-          )
-        : [],
     });
   }
 

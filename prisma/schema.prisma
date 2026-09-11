@@ -129,6 +129,7 @@ model Destination {
   longitude   Float
   arrivalDate String
   leaveDate   String
+  activities Activity[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -136,4 +137,28 @@ model Destination {
   trip Trip @relation(fields: [tripId], references: [tripId], onDelete: Cascade)
 
   @@map("destinations")
+}
+
+model Activity {
+  activityId    String       @id @default(uuid())
+  destinationId String
+
+  day           Int
+  startTime     String
+  activityType  ActivityType
+  description   String
+  notes         String?
+
+  destination Destination @relation(fields: [destinationId], references: [destinationId], onDelete: Cascade)
+
+  @@map("activity")
+}
+
+ enum ActivityType {
+  FLIGHT          @map("flight")
+  HOTEL_CHECK_IN  @map("hotel check in")
+  HOTEL_CHECK_OUT @map("hotel check out")
+  FOOD_AND_DRINK  @map("food & drink")
+  ACTIVITY        @map("activity")
+  OTHER           @map("other")
 }

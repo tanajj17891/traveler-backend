@@ -13,6 +13,7 @@ import { BudgetController } from "./controller/budgetController";
 import { NotesController } from "./controller/notesController";
 import { TravelersController } from "./controller/travelerController";
 import { DestinationController } from "./controller/destinationsController";
+import { ActivityController } from "./controller/activityController";
 
 dotenv.config();
 
@@ -37,6 +38,7 @@ const app = createExpressServer({
     NotesController,
     TravelersController,
     DestinationController,
+    ActivityController,
   ],
   middlewares: [ErrorMiddleware],
   defaultErrorHandler: false,

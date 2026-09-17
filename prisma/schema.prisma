@@ -25,6 +25,7 @@ model Profile {
   trips       Trip[]
   budgets     Budgets[]
   notes       Note[]
+  travelers   Travelers[]
 }
 
 enum TravelStyle {
@@ -56,8 +57,8 @@ model Trip {
   updatedAt DateTime @updatedAt
 
   tripName    String
-  destination Json[]
-  travelers   String[]
+  destination Destination[]
+  travelers   Travelers[]
   budgets     Budgets[]
   notes       Note[]
 
@@ -100,4 +101,64 @@ model Note {
 
   @@unique([tripId, profileId])
   @@map("notes")
+}
+
+model Travelers {
+  travelerId String @id @default(uuid())
+  tripId     String
+  profileId  String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  email String
+
+  trip    Trip    @relation(fields: [tripId], references: [tripId], onDelete: Cascade)
+  profile Profile @relation(fields: [profileId], references: [profileId], onDelete: Cascade)
+
+  @@unique([tripId, profileId])
+  @@map("Travelers")
+}
+
+model Destination {
+  destinationId String @id @default(uuid())
+  tripId        String
+
+  name        String
+  latitude    Float
+  longitude   Float
+  arrivalDate String
+  leaveDate   String
+  activities Activity[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  trip Trip @relation(fields: [tripId], references: [tripId], onDelete: Cascade)
+
+  @@map("destinations")
+}
+
+model Activity {
+  activityId    String       @id @default(uuid())
+  destinationId String
+
+  day           Int
+  startTime     String
+  activityType  ActivityType
+  description   String
+  notes         String?
+
+  destination Destination @relation(fields: [destinationId], references: [destinationId], onDelete: Cascade)
+
+  @@map("activity")
+}
+
+ enum ActivityType {
+  FLIGHT          @map("flight")
+  HOTEL_CHECK_IN  @map("hotel check in")
+  HOTEL_CHECK_OUT @map("hotel check out")
+  FOOD_AND_DRINK  @map("food & drink")
+  ACTIVITY        @map("activity")
+  OTHER           @map("other")
 }

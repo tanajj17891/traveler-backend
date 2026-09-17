@@ -111,7 +111,7 @@ export class NotesController {
     }
 
     try {
-      return await notesManager.getNoteByTripAndProfile(tripId, profileId);
+      return await notesManager.getNotesByTripAndProfileId(tripId, profileId);
     } catch (e) {
       if (e instanceof ExtendedError) {
         throw e;
